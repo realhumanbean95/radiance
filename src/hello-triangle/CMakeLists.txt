@@ -1,5 +1,5 @@
 # Program that renders a triangle
-add_executable(hello-triangle main.cpp)
+add_executable(hello-triangle hello-triangle.cpp)
 
 target_link_libraries(
   hello-triangle            # target

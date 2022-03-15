@@ -1,6 +1,6 @@
 
 # Program that renders a triangle
-add_executable(hello-shader main.cpp)
+add_executable(hello-shader hello-shader.cpp)
 
 target_include_directories(hello-shader
         PRIVATE
