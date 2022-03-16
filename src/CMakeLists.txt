@@ -1,16 +1,14 @@
 # sdl example
-add_subdirectory(sdl)
+#add_subdirectory(glfw)
 
-find_package(fmt CONFIG)
-find_package(spdlog CONFIG)
-find_package(docopt CONFIG)
+find_package(glfw3 REQUIRED)
+find_package(glad REQUIRED)
 
-# Generic test that uses conan libs
-add_executable(intro main.cpp)
+# Program that renders a triangle
+add_executable(hello-triangle main.cpp)
+
 target_link_libraries(
-  intro
-  PRIVATE project_options
-          project_warnings
-          docopt::docopt
-          fmt::fmt
-          spdlog::spdlog)
+  hello-triangle            # target
+  PRIVATE project_options   # items...
+          glfw::glfw
+          glad::glad)
