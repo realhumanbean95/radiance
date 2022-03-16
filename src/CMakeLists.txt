@@ -1,14 +1,6 @@
-# sdl example
-#add_subdirectory(glfw)
 
 find_package(glfw3 REQUIRED)
 find_package(glad REQUIRED)
 
-# Program that renders a triangle
-add_executable(hello-triangle main.cpp)
-
-target_link_libraries(
-  hello-triangle            # target
-  PRIVATE project_options   # items...
-          glfw::glfw
-          glad::glad)
+add_subdirectory(hello-triangle)
+add_subdirectory(hello-shader)
