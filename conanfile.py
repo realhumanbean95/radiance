@@ -1,14 +1,13 @@
 from conans import ConanFile
 
 
-class DeepProject(ConanFile):
-    name = "deep"
+class RadianceProject(ConanFile):
+    name = "radiance"
     version = "0.1.0"
     requires = (
-        "docopt.cpp/0.6.2",
         "glfw/3.3.6",
         "glad/0.1.34",
-        "stb/cci.20210713"
+        "stb/cci.20210910"
     )
     generators = "cmake", "gcc", "txt", "cmake_find_package"
 
