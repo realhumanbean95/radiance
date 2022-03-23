@@ -56,8 +56,6 @@ int main(int argc, const char** argv)
 
     glViewport(0, 0, 800, 600);
 
-    shader::Shader shader1{}; // default shader
-
     // verts for a triangle
     float vertices1[] = {
         // positions       // colors
@@ -73,7 +71,7 @@ int main(int argc, const char** argv)
     drawable::DrawableFactory factory{};
 
     auto drawable1 = factory.createDrawable(drawable::F3POSF3COL, vertices1, indices1, sizeof(vertices1), sizeof(indices1));
-    drawable1->setShader(shader1);
+    drawable1->setShader(shader::Shader{});
 
     // verts for a quad
     float vertices2[] = {
@@ -89,7 +87,7 @@ int main(int argc, const char** argv)
     };
 
     auto drawable2 = factory.createDrawable(drawable::F3POS, vertices2, indices2, sizeof(vertices2), sizeof(indices2));
-    drawable2->setShader(shader1);
+    drawable2->setShader(shader::Shader{});
 
 
     while (!glfwWindowShouldClose(window))
