@@ -19,7 +19,7 @@ void processInput(GLFWwindow* window)
 
 int main(int argc, char** argv, char** envp)
 {
-    std::cout << "Hello Triangle!" << std::endl;
+    std::cout << "Hello Shader!" << std::endl;
 
     /* Initialize the library */
     if (!glfwInit()) {
@@ -50,8 +50,10 @@ int main(int argc, char** argv, char** envp)
 
     glViewport(0, 0, 800, 600);
 
-    Shader ourShader(R"(C:\Users\luket\repos\radiance\src\hello-shader\shader-src\shader.vs)",
-        R"(C:\Users\luket\repos\radiance\src\hello-shader\shader-src\shader.fs)");
+    Shader ourShader(
+        R"(C:\Users\luket\repos\radiance\resources\shader\shader1.vs)",
+        R"(C:\Users\luket\repos\radiance\resources\shader\shader1.fs)"
+    );
 
     float vertices[] = {
         // positions       // colors

@@ -1,10 +1,16 @@
 #include <iostream>
-#include <cmath>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "drawable.hpp"
 #include "shader.hpp"
+
+// This file will be generated automatically when you run the CMake configuration step.
+// It creates a namespace called `radiance`.
+// You can modify the source template at `configured_files/config.hpp.in`.
+#include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -17,16 +23,15 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 }
 
-int main(int argc, char** argv, char** envp)
+int main(int argc, const char** argv)
 {
-    std::cout << "Hello Triangle!" << std::endl;
+    std::cout << "Hello Drawable!" << std::endl;
 
     /* Initialize the library */
     if (!glfwInit()) {
         std::cout << "glfwInit failed." << std::endl;
         return -1;
     }
-
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -38,7 +43,6 @@ int main(int argc, char** argv, char** envp)
         glfwTerminate();
         return -1;
     }
-
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -50,43 +54,39 @@ int main(int argc, char** argv, char** envp)
 
     glViewport(0, 0, 800, 600);
 
-    Shader ourShader(
+    Shader shader1(
         R"(C:\Users\luket\repos\radiance\resources\shader\shader1.vs)",
         R"(C:\Users\luket\repos\radiance\resources\shader\shader1.fs)"
     );
 
-    float vertices[] = {
+    // verts for a triangle
+    float vertices1[] = {
         // positions       // colors
        -0.5f, -0.5f, 0.0f,  0.18f, 0.01f, 0.31f,   // bottom right
         0.5f, -0.5f, 0.0f,  0.97f, 0.67f, 0.32f,   // bottom left
         0.0f,  0.5f, 0.0f,  0.96f, 0.18f, 0.59f    // top 
     };
 
-    // generate a vertex buffer object
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
+    uint32_t indices1[] = {  // note that we start from 0!
+        0, 1, 2,   // first triangle
+    };
 
-    // generate a vertex attribute object
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
+    auto drawable1 = Drawable(vertices1, indices1, sizeof(vertices1), sizeof(indices1));
 
-    glBindVertexArray(VAO);
+    // verts for a quad
+    float vertices2[] = {
+        0.5f,  0.5f, 0.0f,  // top right
+        0.5f, -0.5f, 0.0f,  // bottom right
+       -0.5f, -0.5f, 0.0f,  // bottom left
+       -0.5f,  0.5f, 0.0f   // top left 
+    };
 
-    // bind our vbo to GL_ARRAY_BUFFER on the gpu, and copy vertex data into it
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    unsigned int indices2[] = {  // note that we start from 0!
+        0, 1, 3,   // first triangle
+        1, 2, 3    // second triangle
+    };
 
-    //specify vertex buffer semantic and enable vertex attribute array
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // unbind buffers
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    auto drawable2 = Drawable(vertices2, indices2, sizeof(vertices2), sizeof(indices2));
 
 
     while (!glfwWindowShouldClose(window))
@@ -98,21 +98,22 @@ int main(int argc, char** argv, char** envp)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        ourShader.use();
-        //ourShader.setFloat("someUniform", 1.0f);
+        shader1.use();
 
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        drawable1.bindVAO();
+        drawable1.draw();
+
+        //drawable2.bindVAO();
+        //drawable2.draw();
 
         //call events and swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
-    }
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+        // 5 unbind vertex array
+        glBindVertexArray(0);
+    }
 
     glfwTerminate();
     return 0;
-
 }

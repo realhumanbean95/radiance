@@ -17,4 +17,4 @@ add_executable(hello-shader hello-shader.cpp)
 
 target_include_directories(hello-shader PRIVATE include/)
 
-target_link_libraries( hello-shader PRIVATE project_options glfw::glfw glad::glad)
+target_link_libraries( hello-shader PRIVATE project_options glfw::glfw glad::glad namedtype::namedtype)

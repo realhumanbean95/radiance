@@ -7,6 +7,10 @@
 #include <sstream>
 #include <iostream>
 
+#pragma once
+
+#include <optional>
+
 class Shader
 {
 public:

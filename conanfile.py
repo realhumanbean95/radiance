@@ -7,7 +7,8 @@ class RadianceProject(ConanFile):
     requires = (
         "glfw/3.3.6",
         "glad/0.1.34",
-        "stb/cci.20210910"
+        "stb/cci.20210910",
+        "namedtype/20190324"
     )
     generators = "cmake", "gcc", "txt", "cmake_find_package"
 
