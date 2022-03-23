@@ -71,7 +71,7 @@ int main(int argc, const char** argv)
         0, 1, 2,   // first triangle
     };
 
-    auto drawable1 = Drawable(vertices1, indices1, sizeof(vertices1), sizeof(indices1));
+    auto drawable1 = Drawable_F3POSF3COL(vertices1, indices1, sizeof(vertices1), sizeof(indices1));
 
     // verts for a quad
     float vertices2[] = {
@@ -86,7 +86,7 @@ int main(int argc, const char** argv)
         1, 2, 3    // second triangle
     };
 
-    auto drawable2 = Drawable(vertices2, indices2, sizeof(vertices2), sizeof(indices2));
+    auto drawable2 = Drawable_F3POS(vertices2, indices2, sizeof(vertices2), sizeof(indices2));
 
 
     while (!glfwWindowShouldClose(window))
