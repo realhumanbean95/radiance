@@ -4,13 +4,13 @@
 #include <GLFW/glfw3.h>
 
 #include "drawable.hpp"
+#include "factory.hpp"
 #include "shader.hpp"
 
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
 // You can modify the source template at `configured_files/config.hpp.in`.
 #include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
-
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -25,6 +25,8 @@ void processInput(GLFWwindow* window)
 
 int main(int argc, const char** argv)
 {
+    using namespace radiance;
+
     std::cout << "Hello Drawable!" << std::endl;
 
     /* Initialize the library */
@@ -71,7 +73,9 @@ int main(int argc, const char** argv)
         0, 1, 2,   // first triangle
     };
 
-    auto drawable1 = Drawable_F3POSF3COL(vertices1, indices1, sizeof(vertices1), sizeof(indices1));
+    drawable::DrawableFactory factory{};
+
+    auto drawable1 = factory.createDrawable(drawable::F3POSF3COL, vertices1, indices1, sizeof(vertices1), sizeof(indices1));
 
     // verts for a quad
     float vertices2[] = {
@@ -86,7 +90,7 @@ int main(int argc, const char** argv)
         1, 2, 3    // second triangle
     };
 
-    auto drawable2 = Drawable_F3POS(vertices2, indices2, sizeof(vertices2), sizeof(indices2));
+    auto drawable2 = factory.createDrawable(drawable::F3POS, vertices2, indices2, sizeof(vertices2), sizeof(indices2));
 
 
     while (!glfwWindowShouldClose(window))
@@ -100,11 +104,11 @@ int main(int argc, const char** argv)
 
         shader1.use();
 
-        drawable1.bindVAO();
-        drawable1.draw();
+        drawable2->bindContext();
+        drawable2->draw();
 
-        //drawable2.bindVAO();
-        //drawable2.draw();
+        drawable1->bindContext();
+        drawable1->draw();
 
         //call events and swap buffers
         glfwSwapBuffers(window);

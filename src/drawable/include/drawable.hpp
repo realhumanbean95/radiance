@@ -1,6 +1,17 @@
+#pragma once
 #include <glad/glad.h>
 
-class Drawable_F3POSF3COL
+namespace radiance::drawable
+{
+
+class Drawable
+{
+public:
+    virtual void bindContext() = 0;
+    virtual void draw() = 0;
+};
+
+class Drawable_F3POSF3COL : public Drawable
 {
 public:
     Drawable_F3POSF3COL(float* _vertices, uint32_t* _indices, uint32_t _vertices_size_bytes, uint32_t _indices_size_bytes)
@@ -43,7 +54,7 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
-    void bindVAO()
+    void bindContext()
     {
         glBindVertexArray(VAO);
     }
@@ -62,7 +73,7 @@ private:
     uint32_t EBO;
 };
 
-class Drawable_F3POS
+class Drawable_F3POS : public Drawable
 {
 public:
     Drawable_F3POS(float* _vertices, uint32_t* _indices, uint32_t _vertices_size_bytes, uint32_t _indices_size_bytes)
@@ -101,7 +112,7 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
-    void bindVAO()
+    void bindContext()
     {
         glBindVertexArray(VAO);
     }
@@ -120,3 +131,4 @@ private:
     uint32_t EBO;
 };
 
+}; // namespace radiance::drawable
