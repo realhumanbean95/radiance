@@ -1,5 +1,6 @@
 #pragma once
 #include <glad/glad.h>
+#include "shader.hpp"
 
 namespace radiance::drawable
 {
@@ -9,6 +10,12 @@ class Drawable
 public:
     virtual void bindContext() = 0;
     virtual void draw() = 0;
+
+    virtual void setShader(radiance::shader::Shader _shader) {
+        shader = _shader;
+    }
+
+    radiance::shader::Shader shader;
 };
 
 class Drawable_F3POSF3COL : public Drawable
@@ -56,6 +63,7 @@ public:
 
     void bindContext()
     {
+        shader.use();
         glBindVertexArray(VAO);
     }
 
@@ -63,6 +71,7 @@ public:
     {
         glDrawElements(GL_TRIANGLES, indices_size_bytes, GL_UNSIGNED_INT, 0);
     }
+
 private:
     float* vertices;
     uint32_t* indices;
@@ -114,6 +123,7 @@ public:
 
     void bindContext()
     {
+        shader.use();
         glBindVertexArray(VAO);
     }
 
@@ -121,6 +131,7 @@ public:
     {
         glDrawElements(GL_TRIANGLES, indices_size_bytes, GL_UNSIGNED_INT, 0);
     }
+
 private:
     float* vertices;
     uint32_t* indices;

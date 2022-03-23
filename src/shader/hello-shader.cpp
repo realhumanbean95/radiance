@@ -50,10 +50,7 @@ int main(int argc, char** argv, char** envp)
 
     glViewport(0, 0, 800, 600);
 
-    Shader ourShader(
-        R"(C:\Users\luket\repos\radiance\resources\shader\shader1.vs)",
-        R"(C:\Users\luket\repos\radiance\resources\shader\shader1.fs)"
-    );
+    radiance::shader::Shader ourShader{};
 
     float vertices[] = {
         // positions       // colors
