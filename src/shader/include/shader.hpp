@@ -17,7 +17,8 @@ public:
     unsigned int ID;
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
-    Shader(const char* vertexPath, const char* fragmentPath)
+    Shader( const char* vertexPath = R"(C:\Users\luket\repos\radiance\resources\shader\shader1.vs)",
+            const char* fragmentPath = R"(C:\Users\luket\repos\radiance\resources\shader\shader1.fs)" )
     {
         // 1. retrieve the vertex/fragment source code from filePath
         std::string vertexCode;

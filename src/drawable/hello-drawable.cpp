@@ -56,10 +56,7 @@ int main(int argc, const char** argv)
 
     glViewport(0, 0, 800, 600);
 
-    Shader shader1(
-        R"(C:\Users\luket\repos\radiance\resources\shader\shader1.vs)",
-        R"(C:\Users\luket\repos\radiance\resources\shader\shader1.fs)"
-    );
+    Shader shader1{}; // default shader
 
     // verts for a triangle
     float vertices1[] = {
