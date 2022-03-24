@@ -7,8 +7,6 @@ target_link_libraries(
 	radiance 
 	PRIVATE 
 		project_options 
-		glfw::glfw 
-		glad::glad
 		radiance::window
 		radiance::shader
 		radiance::drawable
