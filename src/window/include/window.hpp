@@ -1,7 +1,7 @@
 #pragma once
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "shader.hpp"
 
 namespace radiance::window
 {
@@ -9,18 +9,21 @@ namespace radiance::window
 class WindowGLFW
 {
 public:
-    WindowGLFW()
+    WindowGLFW(int width, int height)
     {
         /* Initialize the library */
         if (!glfwInit()) {
             std::cout << "glfwInit failed." << std::endl;
             //return -1;
         }
+
+
+        // version information should eventually come from environment variables or some kind of external configuration
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        window = glfwCreateWindow(800, 600, "Hello Radiance!", NULL, NULL);
+        window = glfwCreateWindow(width, height, "Hello Radiance!", NULL, NULL);
         if (window == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
@@ -38,7 +41,9 @@ public:
             //return -1;
         }
 
-        glViewport(0, 0, 800, 600);
+        // NOTE: I think having this OpenGL call in this class makes the window abstraction leaky...
+        // might eventually need to remove glad library as a dependency, only need glfw...
+        glViewport(0, 0, width, height);
 
     }
     ~WindowGLFW()
