@@ -6,10 +6,10 @@
 namespace radiance::window
 {
 
-class Window
+class WindowGLFW
 {
 public:
-    Window()
+    WindowGLFW()
     {
         /* Initialize the library */
         if (!glfwInit()) {
@@ -41,7 +41,7 @@ public:
         glViewport(0, 0, 800, 600);
 
     }
-    ~Window()
+    ~WindowGLFW()
     {
         glfwTerminate(); 
     }
