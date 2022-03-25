@@ -106,4 +106,4 @@ if(MSVC)
 endif()
 
 # set the startup project for the "play" button in MSVC
-set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT hello-drawable)
+set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT radiance)
