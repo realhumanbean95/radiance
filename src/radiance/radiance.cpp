@@ -16,7 +16,7 @@ int main(int argc, const char** argv)
 
     std::cout << "Hello Radiance!" << std::endl;
 
-    window::WindowGLFW window{};
+    window::WindowGLFW window{800, 600};
 
     // verts for a triangle
     float vertices1[] = {
