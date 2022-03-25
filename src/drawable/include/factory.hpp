@@ -7,7 +7,8 @@ namespace radiance::drawable
     enum VertexSemantic
     {
         F3POSF3COL = 0,
-        F3POS = 1
+        F3POS = 1,
+        F3POSF2TEX = 2
     };
 
     class DrawableFactory
@@ -24,6 +25,9 @@ namespace radiance::drawable
                 break; //optional
             case F3POS: // 3 floats for position
                 return new Drawable_F3POS(_vertices, _indices, _vertices_size_bytes, _indices_size_bytes);
+                break; //optional
+            case F3POSF2TEX: // 3 floats for position, 2 floats for texture coordinates
+                return new Drawable_F3POSF2TEX(_vertices, _indices, _vertices_size_bytes, _indices_size_bytes);
                 break; //optional
 
              // you can have any number of case statements.
