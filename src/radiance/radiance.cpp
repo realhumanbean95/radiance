@@ -4,6 +4,7 @@
 #include "drawable.hpp"
 #include "factory.hpp"
 #include "shader.hpp"
+#include "texture.hpp"
 
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
@@ -35,12 +36,15 @@ int main(int argc, const char** argv)
     auto drawable1 = factory.createDrawable(drawable::F3POSF3COL, vertices1, indices1, sizeof(vertices1), sizeof(indices1));
     drawable1->setShader(shader::Shader{});
 
+
+
     // verts for a quad
     float vertices2[] = {
-        0.5f,  0.5f, 0.0f,  // top right
-        0.5f, -0.5f, 0.0f,  // bottom right
-       -0.5f, -0.5f, 0.0f,  // bottom left
-       -0.5f,  0.5f, 0.0f   // top left 
+        // positions        // colors
+        0.5f,  0.5f, 0.0f,  1.0f, 1.0f,  // top right
+        0.5f, -0.5f, 0.0f,  1.0f, 0.0f,  // bottom right
+       -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,  // bottom left
+       -0.5f,  0.5f, 0.0f,  0.0f, 1.0f   // top left 
     };
 
     unsigned int indices2[] = {  // note that we start from 0!
@@ -48,9 +52,15 @@ int main(int argc, const char** argv)
         1, 2, 3    // second triangle
     };
 
-    auto drawable2 = factory.createDrawable(drawable::F3POS, vertices2, indices2, sizeof(vertices2), sizeof(indices2));
-    drawable2->setShader(shader::Shader{});
+    auto drawable2 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, indices2, sizeof(vertices2), sizeof(indices2));
 
+    shader::Shader shader{
+        R"(C:\Users\luket\repos\radiance\resources\shader\shader-texture.vs)",
+        R"(C:\Users\luket\repos\radiance\resources\shader\shader-texture.fs)" };
+
+    drawable2->setShader(shader);
+
+    texture::Texture texture{};
 
     while ( !window.shouldClose() )
     {

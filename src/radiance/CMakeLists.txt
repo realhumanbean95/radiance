@@ -10,4 +10,5 @@ target_link_libraries(
 		radiance::window
 		radiance::shader
 		radiance::drawable
+		radiance::texture
 )

@@ -1,14 +1,9 @@
-# Executable program configuration
-add_executable(texture texture.cpp)
+add_library(texture INTERFACE)
 
-#target_include_directories(texture PRIVATE include/)
+#set_target_properties(texture PROPERTIES LINKER_LANGUAGE CXX)
 
-target_link_libraries(
-	texture 
-	PRIVATE 
-		project_options
-		stb::stb
-		radiance::window
-		radiance::shader
-		radiance::drawable
-)
+add_library( radiance::texture ALIAS texture )
+
+target_include_directories( texture INTERFACE include/ )
+
+target_link_libraries( texture INTERFACE project_options glad::glad stb::stb)
