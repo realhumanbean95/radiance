@@ -32,6 +32,8 @@ namespace radiance::texture
 
             if (data)
             {
+                stbi_set_flip_vertically_on_load(true);
+                glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
                 glGenerateMipmap(GL_TEXTURE_2D);
             }
@@ -43,7 +45,7 @@ namespace radiance::texture
             stbi_image_free(data);
         }
 
-        void bindTexture()
+        void bind()
         {
             glBindTexture(GL_TEXTURE_2D, texture);
         }

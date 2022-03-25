@@ -60,7 +60,7 @@ int main(int argc, const char** argv)
 
     drawable2->setShader(shader);
 
-    texture::Texture texture{};
+    drawable2->setTexture( texture::Texture{} );
 
     while ( !window.shouldClose() )
     {
@@ -74,8 +74,8 @@ int main(int argc, const char** argv)
         drawable2->bindContext();
         drawable2->draw(); // in OpenGL, render to back buffer
 
-        drawable1->bindContext();
-        drawable1->draw(); // // in OpenGL, render to back buffer
+        //drawable1->bindContext();
+        //drawable1->draw(); // // in OpenGL, render to back buffer
 
         //call events and swap buffers
         window.swapBuffers();

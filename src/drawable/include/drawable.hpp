@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include "shader.hpp"
+#include "texture.hpp"
 
 namespace radiance::drawable
 {
@@ -15,6 +16,8 @@ public:
     virtual void setShader(radiance::shader::Shader _shader) {
         shader = _shader;
     }
+
+    virtual void setTexture(radiance::texture::Texture texture) {};
 
     radiance::shader::Shader shader;
 };
@@ -187,9 +190,14 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
+    void setTexture(radiance::texture::Texture _texture) {
+        texture = _texture;
+    }
+
     void bindContext()
     {
         shader.use();
+        texture.bind();
         glBindVertexArray(VAO);
     }
 
@@ -206,6 +214,7 @@ private:
     uint32_t VAO;
     uint32_t VBO;
     uint32_t EBO;
+    texture::Texture texture;
 };
 
 }; // namespace radiance::drawable
