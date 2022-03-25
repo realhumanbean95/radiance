@@ -6,4 +6,3 @@ find_package(stb REQUIRED)
 
 add_subdirectory(drawable)
 add_subdirectory(shader)
-add_subdirectory(hello-texture)
