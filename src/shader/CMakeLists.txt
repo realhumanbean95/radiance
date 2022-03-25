@@ -1,4 +1,3 @@
-
 # shader library configuration
 
 add_library(shader INTERFACE)

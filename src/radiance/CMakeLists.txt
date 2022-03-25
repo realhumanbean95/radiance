@@ -9,6 +9,7 @@ target_link_libraries(
 		project_options 
 		glfw::glfw 
 		glad::glad
+		radiance::window
 		radiance::shader
 		radiance::drawable
 )
