@@ -55,8 +55,9 @@ int main(int argc, const char** argv)
     auto drawable2 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, indices2, sizeof(vertices2), sizeof(indices2));
 
     shader::Shader shader{
-        R"(C:\Users\luket\repos\radiance\resources\shader\shader-texture.vs)",
-        R"(C:\Users\luket\repos\radiance\resources\shader\shader-texture.fs)" };
+        (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader-texture.vs)") ).c_str(),
+        (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader-texture.fs)") ).c_str() 
+    };
 
     drawable2->setShader(shader);
 

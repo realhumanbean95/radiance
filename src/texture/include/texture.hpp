@@ -4,6 +4,11 @@
 
 #include <glad/glad.h>
 
+// This file will be generated automatically when you run the CMake configuration step.
+// It creates a namespace called `radiance`.
+// You can modify the source template at `configured_files/config.hpp.in`.
+#include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -14,7 +19,7 @@ namespace radiance::texture
     {
     public:
         
-        Texture(const char* imagePath = R"(C:\Users\luket\repos\radiance\resources\texture\container.jpg)")
+        Texture(const char* imagePath = (radiance::cmake::project_dir + std::string(R"(\resources\texture\container.jpg)")).c_str()  )
         {
             // create and bind the texture object
             glGenTextures(1, &texture);

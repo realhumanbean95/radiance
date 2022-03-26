@@ -7,9 +7,10 @@
 #include <sstream>
 #include <iostream>
 
-#pragma once
-
-#include <optional>
+// This file will be generated automatically when you run the CMake configuration step.
+// It creates a namespace called `radiance`.
+// You can modify the source template at `configured_files/config.hpp.in`.
+#include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
 
 namespace radiance::shader
 {
@@ -20,8 +21,8 @@ namespace radiance::shader
         unsigned int ID;
         // constructor generates the shader on the fly
         // ------------------------------------------------------------------------
-        Shader(const char* vertexPath = R"(C:\Users\luket\repos\radiance\resources\shader\shader1.vs)",
-            const char* fragmentPath = R"(C:\Users\luket\repos\radiance\resources\shader\shader1.fs)")
+        Shader(const char* vertexPath = (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader1.vs)")).c_str(),
+            const char* fragmentPath = (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader1.fs)")).c_str() )
         {
             // 1. retrieve the vertex/fragment source code from filePath
             std::string vertexCode;
