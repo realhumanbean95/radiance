@@ -19,6 +19,7 @@ namespace radiance::shader
     {
     public:
         unsigned int ID;
+        uint32_t shader_transform_location;
         // constructor generates the shader on the fly
         // ------------------------------------------------------------------------
         Shader(const char* vertexPath = (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader1.vs)")).c_str(),
@@ -72,6 +73,10 @@ namespace radiance::shader
             glAttachShader(ID, fragment);
             glLinkProgram(ID);
             checkCompileErrors(ID, "PROGRAM");
+
+            // get location of shader's transform uniform
+            shader_transform_location = glGetUniformLocation(ID, "transform");
+
             // delete the shaders as they're linked into our program now and no longer necessary
             glDeleteShader(vertex);
             glDeleteShader(fragment);
@@ -104,6 +109,12 @@ namespace radiance::shader
         {
             uint32_t location = glGetUniformLocation(ID, name.c_str());
             glUniformMatrix4fv( location, 1, GL_FALSE, value );
+        }
+
+        // might be a good place for a C++20 Mat4 concept...
+        void setMat4(uint32_t location, float* value) const
+        {
+            glUniformMatrix4fv(location, 1, GL_FALSE, value);
         }
 
     private:

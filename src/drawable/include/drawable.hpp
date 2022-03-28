@@ -19,6 +19,11 @@ public:
 
     virtual void setTexture(radiance::texture::Texture texture) {};
 
+    void transform(float* value_ptr)
+    {
+        shader.setMat4(shader.shader_transform_location, value_ptr);
+    }
+
     radiance::shader::Shader shader;
 };
 

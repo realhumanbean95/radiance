@@ -58,18 +58,14 @@ int main(int argc, const char** argv)
 
     auto drawable2 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, indices2, sizeof(vertices2), sizeof(indices2));
 
-    shader::Shader shader{
+    drawable2->setShader( shader::Shader{
         (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader-texture.vs)")).c_str(),
         (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader-texture.fs)")).c_str()
-    };
-
-    drawable2->setShader(shader);
+        });
 
     drawable2->setTexture(texture::Texture{});
 
-    //glm::mat4 trans = glm::mat4(1.0f);
-    //trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    //trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+
 
     while (!window.shouldClose())
     {
@@ -80,16 +76,16 @@ int main(int argc, const char** argv)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        drawable1->bindContext();
-        drawable1->draw(); // in OpenGL, render to back buffer
+        drawable2->bindContext();
+        drawable2->draw(); // in OpenGL, render to back buffer
 
         glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f) );
+        trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
 
-        drawable2->bindContext();
-        drawable2->shader.setMat4("transform", glm::value_ptr(trans));
-        drawable2->draw(); // in OpenGL, render to back buffer
+        drawable1->bindContext();
+        drawable1->transform( glm::value_ptr(trans) ); // set's transform to use next frame
+        drawable1->draw(); // in OpenGL, render to back buffer
 
         // call events and swap front and back buffers
         window.swapBuffers();
