@@ -99,6 +99,13 @@ namespace radiance::shader
             glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
         }
 
+        // might be a good place for a C++20 Mat4 concept...
+        void setMat4(const std::string& name, float* value) const
+        {
+            uint32_t location = glGetUniformLocation(ID, name.c_str());
+            glUniformMatrix4fv( location, 1, GL_FALSE, value );
+        }
+
     private:
         // utility function for checking shader compilation/linking errors.
         // ------------------------------------------------------------------------

@@ -8,8 +8,9 @@ class RadianceProject(ConanFile):
         "glfw/3.3.6",
         "glad/0.1.34",
         "stb/cci.20210910",
-        "namedtype/20190324"
+        "glm/0.9.9.8"
     )
+
     generators = "cmake", "gcc", "txt", "cmake_find_package"
 
     def configure(self):
