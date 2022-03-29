@@ -18,8 +18,8 @@ namespace radiance::shader
     class Shader
     {
     public:
-        unsigned int ID;
-        uint32_t shader_transform_location;
+        unsigned int _ID;
+        uint32_t _shader_transform_location;
         // constructor generates the shader on the fly
         // ------------------------------------------------------------------------
         Shader(const char* vertexPath = (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader1.vs)")).c_str(),
@@ -68,14 +68,14 @@ namespace radiance::shader
             glCompileShader(fragment);
             checkCompileErrors(fragment, "FRAGMENT");
             // shader Program
-            ID = glCreateProgram();
-            glAttachShader(ID, vertex);
-            glAttachShader(ID, fragment);
-            glLinkProgram(ID);
-            checkCompileErrors(ID, "PROGRAM");
+            _ID = glCreateProgram();
+            glAttachShader(_ID, vertex);
+            glAttachShader(_ID, fragment);
+            glLinkProgram(_ID);
+            checkCompileErrors(_ID, "PROGRAM");
 
             // get location of shader's transform uniform
-            shader_transform_location = glGetUniformLocation(ID, "transform");
+            _shader_transform_location = glGetUniformLocation(_ID, "transform");
 
             // delete the shaders as they're linked into our program now and no longer necessary
             glDeleteShader(vertex);
@@ -85,36 +85,36 @@ namespace radiance::shader
         // ------------------------------------------------------------------------
         void use()
         {
-            glUseProgram(ID);
+            glUseProgram(_ID);
         }
         // utility uniform functions
         // ------------------------------------------------------------------------
         void setBool(const std::string& name, bool value) const
         {
-            glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+            glUniform1i(glGetUniformLocation(_ID, name.c_str()), (int)value);
         }
         // ------------------------------------------------------------------------
         void setInt(const std::string& name, int value) const
         {
-            glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+            glUniform1i(glGetUniformLocation(_ID, name.c_str()), value);
         }
         // ------------------------------------------------------------------------
         void setFloat(const std::string& name, float value) const
         {
-            glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+            glUniform1f(glGetUniformLocation(_ID, name.c_str()), value);
         }
 
         // might be a good place for a C++20 Mat4 concept...
         void setMat4(const std::string& name, float* value) const
         {
-            uint32_t location = glGetUniformLocation(ID, name.c_str());
+            uint32_t location = glGetUniformLocation(_ID, name.c_str());
             glUniformMatrix4fv( location, 1, GL_FALSE, value );
         }
 
         // might be a good place for a C++20 Mat4 concept...
-        void setMat4(uint32_t location, float* value) const
+        void setTransform(float* value) const
         {
-            glUniformMatrix4fv(location, 1, GL_FALSE, value);
+            glUniformMatrix4fv(_shader_transform_location, 1, GL_FALSE, value);
         }
 
     private:

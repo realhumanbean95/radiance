@@ -93,7 +93,7 @@ public:
 
     void draw()
     {
-        _shader.setMat4( _shader.shader_transform_location, _transformUpdate.getDataPtr() );
+        _shader.setTransform( _transformUpdate.getDataPtr() );
         glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
         _transformUpdate = rmath::Mat4{};
     }
