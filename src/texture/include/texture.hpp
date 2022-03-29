@@ -22,8 +22,8 @@ namespace radiance::texture
         Texture(const char* imagePath = (radiance::cmake::project_dir + std::string(R"(\resources\texture\container.jpg)")).c_str()  )
         {
             // create and bind the texture object
-            glGenTextures(1, &texture);
-            glBindTexture(GL_TEXTURE_2D, texture);
+            glGenTextures(1, &_texture);
+            glBindTexture(GL_TEXTURE_2D, _texture);
 
             // set the texture wrapping/filtering options (on the currently bound texture object)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -52,11 +52,11 @@ namespace radiance::texture
 
         void bind()
         {
-            glBindTexture(GL_TEXTURE_2D, texture);
+            glBindTexture(GL_TEXTURE_2D, _texture);
         }
 
     private:
-        uint32_t texture;
+        uint32_t _texture;
     };
 
 } // namespace radiance::texture
