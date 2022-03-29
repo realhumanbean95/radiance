@@ -8,7 +8,7 @@ add_library( radiance::math ALIAS math )
 
 target_include_directories( math INTERFACE include/ )
 
-target_link_libraries( math INTERFACE project_options )
+target_link_libraries( math INTERFACE project_options glm::glm)
 
 # Executable program configuration
 add_executable(hello-math hello-math.cpp)

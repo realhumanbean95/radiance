@@ -15,10 +15,16 @@ namespace radiance::math
     class Mat4
     {
     public:
+        glm::mat4 trans;
 
         Mat4(float* mat4)
         {
             trans = glm::make_mat4(mat4);
+        }
+
+        Mat4()
+        {
+            trans = glm::mat4(1.0f);
         }
 
         Mat4 operator*( const Mat4& Mat4_0 )
@@ -27,8 +33,30 @@ namespace radiance::math
             return Mat4{ glm::value_ptr(result) };
         }
 
+        void translate(float* translation_vector)
+        {
+            trans = glm::translate(trans, glm::make_vec3(translation_vector));
+        }
+
+        void rotate(float* rotation_vector, float degrees)
+        {
+            trans = glm::rotate(trans, degrees, glm::make_vec3(rotation_vector));
+        }
+
+        void scale(float* scaling_vector)
+        {
+            trans = glm::scale(trans, glm::make_vec3(scaling_vector));
+        }
+
+        float* getDataPtr()
+        {
+            return glm::value_ptr(trans);
+        }
+
     private:
-        glm::mat4 trans;
+
+        Mat4(glm::mat4 _mat4) : trans( _mat4 )
+        {}
     };
 
 } // namespace radiance::math

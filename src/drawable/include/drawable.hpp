@@ -3,28 +3,42 @@
 #include <glad/glad.h>
 #include "shader.hpp"
 #include "texture.hpp"
+#include "math.hpp"
 
 namespace radiance::drawable
 {
-
+namespace rmath = radiance::math;
+namespace rshader = radiance::shader;
+namespace rtexture = radiance::texture;
 class Drawable
 {
 public:
     virtual void bindContext() = 0;
     virtual void draw() = 0;
 
-    virtual void setShader(radiance::shader::Shader _shader) {
+    virtual void setShader(rshader::Shader _shader) {
         shader = _shader;
     }
 
-    virtual void setTexture(radiance::texture::Texture texture) {};
+    virtual void setTexture(rtexture::Texture texture) {};
 
-    void transform(float* value_ptr)
+    void translate(float* translation_vector )
     {
-        shader.setMat4(shader.shader_transform_location, value_ptr);
+        transformUpdate.translate( translation_vector );
     }
 
-    radiance::shader::Shader shader;
+    void rotate(float* rotation_vector, float degrees)
+    {
+        transformUpdate.rotate(rotation_vector, degrees);
+    }
+
+    void scale(float* scaling_vector)
+    {
+        transformUpdate.scale(scaling_vector);
+    }
+
+    rshader::Shader shader;
+    rmath::Mat4 transformUpdate;
 };
 
 class Drawable_F3POSF3COL : public Drawable
@@ -78,7 +92,9 @@ public:
 
     void draw()
     {
+        shader.setMat4( shader.shader_transform_location, transformUpdate.getDataPtr() );
         glDrawElements(GL_TRIANGLES, indices_size_bytes, GL_UNSIGNED_INT, 0);
+        transformUpdate = rmath::Mat4{};
     }
 
 private:
@@ -195,7 +211,7 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
-    void setTexture(radiance::texture::Texture _texture) {
+    void setTexture(rtexture::Texture _texture) {
         texture = _texture;
     }
 

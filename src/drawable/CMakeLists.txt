@@ -8,4 +8,8 @@ add_library( radiance::drawable ALIAS drawable )
 
 target_include_directories( drawable INTERFACE include/ )
 
-target_link_libraries( drawable INTERFACE project_options glad::glad radiance::shader radiance::texture )
+target_link_libraries( drawable INTERFACE project_options
+	glad::glad
+	radiance::shader
+	radiance::texture
+	radiance::math )

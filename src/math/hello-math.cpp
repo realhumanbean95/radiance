@@ -6,6 +6,8 @@
 #include "shader.hpp"
 #include "texture.hpp"
 
+#include "math.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -79,13 +81,19 @@ int main(int argc, const char** argv)
         drawable2->bindContext();
         drawable2->draw(); // in OpenGL, render to back buffer
 
-        glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f) );
-        trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+        auto translation_vector = glm::vec3(0.0f, 0.25f, 0.0f);
+        auto rotation_vector = glm::vec3(0.0f, 1.0f, 0.0f);
+        auto scaling_vector = glm::vec3(0.5, 0.5, 0.5);
+
+        radiance::math::Mat4 myMatrix{};
 
         drawable1->bindContext();
-        drawable1->transform( glm::value_ptr(trans) ); // set's transform to use next frame
+        drawable1->translate( glm::value_ptr(translation_vector) );
+        drawable1->rotate( glm::value_ptr( rotation_vector ), (float)glfwGetTime() );
+        drawable1->scale( glm::value_ptr( scaling_vector ) ); // transformations are reset after each draw
         drawable1->draw(); // in OpenGL, render to back buffer
+
+
 
         // call events and swap front and back buffers
         window.swapBuffers();
