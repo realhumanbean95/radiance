@@ -23,17 +23,17 @@ public:
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        window = glfwCreateWindow(width, height, "Hello Radiance!", NULL, NULL);
-        if (window == NULL)
+        _window = glfwCreateWindow(width, height, "Hello Radiance!", NULL, NULL);
+        if (_window == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
             glfwTerminate();
             //return -1;
         }
-        glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(_window);
         
         // NOTE: framebufferSizeCallback is a static member function.
-        glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+        glfwSetFramebufferSizeCallback(_window, framebufferSizeCallback);
 
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
@@ -53,13 +53,13 @@ public:
 
     void processInput()
     {
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, true);
+        if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(_window, true);
     }
 
     void swapBuffers()
     {
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(_window);
     }
 
     void pollEvents()
@@ -69,7 +69,7 @@ public:
 
     bool shouldClose()
     {
-        return glfwWindowShouldClose(window);
+        return glfwWindowShouldClose(_window);
     }
 
 private:
@@ -80,7 +80,7 @@ private:
         glViewport(0, 0, width, height);
     }
 
-    GLFWwindow* window;
+    GLFWwindow* _window;
 
 };
 
