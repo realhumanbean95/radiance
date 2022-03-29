@@ -8,10 +8,6 @@
 
 #include "math.hpp"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
 // You can modify the source template at `configured_files/config.hpp.in`.
@@ -81,16 +77,16 @@ int main(int argc, const char** argv)
         drawable2->bindContext();
         drawable2->draw(); // in OpenGL, render to back buffer
 
-        auto translation_vector = glm::vec3(0.0f, 0.25f, 0.0f);
-        auto rotation_vector = glm::vec3(0.0f, 1.0f, 0.0f);
-        auto scaling_vector = glm::vec3(0.5, 0.5, 0.5);
+        float translation_vector[] {0.0f, 0.25f, 0.0f};
+        float rotation_vector[] { 0.0f, 1.0f, 0.0f };
+        float scaling_vector[]{ 0.5, 0.5, 0.5 };
 
         radiance::math::Mat4 myMatrix{};
 
         drawable1->bindContext();
-        drawable1->translate( glm::value_ptr(translation_vector) );
-        drawable1->rotate( glm::value_ptr( rotation_vector ), (float)glfwGetTime() );
-        drawable1->scale( glm::value_ptr( scaling_vector ) ); // transformations are reset after each draw
+        drawable1->translate(translation_vector );
+        drawable1->rotate( rotation_vector, (float)glfwGetTime() );
+        drawable1->scale( scaling_vector ); // transformations are reset after each draw
         drawable1->draw(); // in OpenGL, render to back buffer
 
 
