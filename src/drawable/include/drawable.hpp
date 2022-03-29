@@ -10,58 +10,59 @@ namespace radiance::drawable
 namespace rmath = radiance::math;
 namespace rshader = radiance::shader;
 namespace rtexture = radiance::texture;
+
 class Drawable
 {
 public:
     virtual void bindContext() = 0;
     virtual void draw() = 0;
 
-    virtual void setShader(rshader::Shader _shader) {
-        shader = _shader;
+    virtual void setShader(rshader::Shader shader) {
+        _shader = shader;
     }
 
     virtual void setTexture(rtexture::Texture texture) {};
 
     void translate(float* translation_vector )
     {
-        transformUpdate.translate( translation_vector );
+        _transformUpdate.translate( translation_vector );
     }
 
     void rotate(float* rotation_vector, float degrees)
     {
-        transformUpdate.rotate(rotation_vector, degrees);
+        _transformUpdate.rotate(rotation_vector, degrees);
     }
 
     void scale(float* scaling_vector)
     {
-        transformUpdate.scale(scaling_vector);
+        _transformUpdate.scale(scaling_vector);
     }
 
-    rshader::Shader shader;
-    rmath::Mat4 transformUpdate;
+    rshader::Shader _shader;
+    rmath::Mat4 _transformUpdate;
 };
 
 class Drawable_F3POSF3COL : public Drawable
 {
 public:
-    Drawable_F3POSF3COL(float* _vertices, uint32_t* _indices, uint32_t _vertices_size_bytes, uint32_t _indices_size_bytes)
-        : vertices{ _vertices }, indices{ _indices }, vertices_size_bytes{ _vertices_size_bytes }, indices_size_bytes{ _indices_size_bytes }
+    Drawable_F3POSF3COL(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
+        : _vertices{ vertices }, _indices{ indices }, _vertices_size_bytes{ vertices_size_bytes }, _indices_size_bytes{ indices_size_bytes }
     {
         // 1. bind Vertex Array Object
         // generate a Vertex Attribute Object
-        // Core OpenGL requires that we use a VAO so it knows what to do with our vertex inputs.
-        // If we fail to bind a VAO, OpenGL will most likely refuse to draw anything.
-        glGenVertexArrays(1, &VAO);
-        glBindVertexArray(VAO);
+        // Core OpenGL requires that we use a _VAO so it knows what to do with our vertex inputs.
+        // If we fail to bind a _VAO, OpenGL will most likely refuse to draw anything.
+        glGenVertexArrays(1, &_VAO);
+        glBindVertexArray(_VAO);
 
         // 2. copy our vertices array in a vertex buffer for OpenGL to use
-        glGenBuffers(1, &VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, _vertices_size_bytes, vertices, GL_STATIC_DRAW);
+        glGenBuffers(1, &_VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, vertices, GL_STATIC_DRAW);
 
         //// 3. copy our index array in a element buffer for OpenGL to use
-        glGenBuffers(1, &EBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glGenBuffers(1, &_EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, indices, GL_STATIC_DRAW);
 
         //// 4. then set the vertex attributes pointers (vertex semantic)
@@ -79,55 +80,55 @@ public:
 
     ~Drawable_F3POSF3COL()
     {
-        glDeleteVertexArrays(1, &VAO);
-        glDeleteBuffers(1, &VBO);
-        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &_VAO);
+        glDeleteBuffers(1, &_VBO);
+        glDeleteBuffers(1, &_EBO);
     }
 
     void bindContext()
     {
-        shader.use();
-        glBindVertexArray(VAO);
+        _shader.use();
+        glBindVertexArray(_VAO);
     }
 
     void draw()
     {
-        shader.setMat4( shader.shader_transform_location, transformUpdate.getDataPtr() );
-        glDrawElements(GL_TRIANGLES, indices_size_bytes, GL_UNSIGNED_INT, 0);
-        transformUpdate = rmath::Mat4{};
+        _shader.setMat4( _shader.shader_transform_location, _transformUpdate.getDataPtr() );
+        glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
+        _transformUpdate = rmath::Mat4{};
     }
 
 private:
-    float* vertices;
-    uint32_t* indices;
-    uint32_t vertices_size_bytes;
-    uint32_t indices_size_bytes;
-    uint32_t VAO;
-    uint32_t VBO;
-    uint32_t EBO;
+    float* _vertices;
+    uint32_t* _indices;
+    uint32_t _vertices_size_bytes;
+    uint32_t _indices_size_bytes;
+    uint32_t _VAO;
+    uint32_t _VBO;
+    uint32_t _EBO;
 };
 
 class Drawable_F3POS : public Drawable
 {
 public:
-    Drawable_F3POS(float* _vertices, uint32_t* _indices, uint32_t _vertices_size_bytes, uint32_t _indices_size_bytes)
-        : vertices{ _vertices }, indices{ _indices }, vertices_size_bytes{ _vertices_size_bytes }, indices_size_bytes{ _indices_size_bytes }
+    Drawable_F3POS(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
+        : _vertices{ vertices }, _indices{ indices }, _vertices_size_bytes{ vertices_size_bytes }, _indices_size_bytes{ indices_size_bytes }
     {
         // 1. bind Vertex Array Object
         // generate a Vertex Attribute Object
-        // Core OpenGL requires that we use a VAO so it knows what to do with our vertex inputs.
-        // If we fail to bind a VAO, OpenGL will most likely refuse to draw anything.
-        glGenVertexArrays(1, &VAO);
-        glBindVertexArray(VAO);
+        // Core OpenGL requires that we use a _VAO so it knows what to do with our vertex inputs.
+        // If we fail to bind a _VAO, OpenGL will most likely refuse to draw anything.
+        glGenVertexArrays(1, &_VAO);
+        glBindVertexArray(_VAO);
 
         // 2. copy our vertices array in a vertex buffer for OpenGL to use
-        glGenBuffers(1, &VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, _vertices_size_bytes, vertices, GL_STATIC_DRAW);
+        glGenBuffers(1, &_VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, vertices, GL_STATIC_DRAW);
 
         //// 3. copy our index array in a element buffer for OpenGL to use
-        glGenBuffers(1, &EBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glGenBuffers(1, &_EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, indices, GL_STATIC_DRAW);
 
         //// 4. then set the vertex attributes pointers (vertex semantic)
@@ -141,54 +142,54 @@ public:
 
     ~Drawable_F3POS()
     {
-        glDeleteVertexArrays(1, &VAO);
-        glDeleteBuffers(1, &VBO);
-        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &_VAO);
+        glDeleteBuffers(1, &_VBO);
+        glDeleteBuffers(1, &_EBO);
     }
 
     void bindContext()
     {
-        shader.use();
-        glBindVertexArray(VAO);
+        _shader.use();
+        glBindVertexArray(_VAO);
     }
 
     void draw()
     {
-        glDrawElements(GL_TRIANGLES, indices_size_bytes, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
     }
 
 private:
-    float* vertices;
-    uint32_t* indices;
-    uint32_t vertices_size_bytes;
-    uint32_t indices_size_bytes;
-    uint32_t VAO;
-    uint32_t VBO;
-    uint32_t EBO;
+    float* _vertices;
+    uint32_t* _indices;
+    uint32_t _vertices_size_bytes;
+    uint32_t _indices_size_bytes;
+    uint32_t _VAO;
+    uint32_t _VBO;
+    uint32_t _EBO;
 };
 
 class Drawable_F3POSF2TEX : public Drawable
 {
 public:
-    Drawable_F3POSF2TEX(float* _vertices, uint32_t* _indices, uint32_t _vertices_size_bytes, uint32_t _indices_size_bytes)
-        : vertices{ _vertices }, indices{ _indices }, vertices_size_bytes{ _vertices_size_bytes }, indices_size_bytes{ _indices_size_bytes }
+    Drawable_F3POSF2TEX(float* vertices, uint32_t* _indices, uint32_t vertices_size_bytes, uint32_t _indices_size_bytes)
+        : _vertices{ vertices }, _indices{ _indices }, _vertices_size_bytes{ vertices_size_bytes }, _indices_size_bytes{ _indices_size_bytes }
     {
         // 1. bind Vertex Array Object
         // generate a Vertex Attribute Object
-        // Core OpenGL requires that we use a VAO so it knows what to do with our vertex inputs.
-        // If we fail to bind a VAO, OpenGL will most likely refuse to draw anything.
-        glGenVertexArrays(1, &VAO);
-        glBindVertexArray(VAO);
+        // Core OpenGL requires that we use a _VAO so it knows what to do with our vertex inputs.
+        // If we fail to bind a _VAO, OpenGL will most likely refuse to draw anything.
+        glGenVertexArrays(1, &_VAO);
+        glBindVertexArray(_VAO);
 
         // 2. copy our vertices array in a vertex buffer for OpenGL to use
-        glGenBuffers(1, &VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, _vertices_size_bytes, vertices, GL_STATIC_DRAW);
+        glGenBuffers(1, &_VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+        glBufferData(GL_ARRAY_BUFFER, _vertices_size_bytes, _vertices, GL_STATIC_DRAW);
 
         //// 3. copy our index array in a element buffer for OpenGL to use
-        glGenBuffers(1, &EBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, indices, GL_STATIC_DRAW);
+        glGenBuffers(1, &_EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, _indices, GL_STATIC_DRAW);
 
         //// 4. then set the vertex attributes pointers (vertex semantic)
         // position attribute
@@ -206,36 +207,36 @@ public:
 
     ~Drawable_F3POSF2TEX()
     {
-        glDeleteVertexArrays(1, &VAO);
-        glDeleteBuffers(1, &VBO);
-        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &_VAO);
+        glDeleteBuffers(1, &_VBO);
+        glDeleteBuffers(1, &_EBO);
     }
 
-    void setTexture(rtexture::Texture _texture) {
-        texture = _texture;
+    void setTexture(rtexture::Texture texture) {
+        _texture = texture;
     }
 
     void bindContext()
     {
-        shader.use();
-        texture.bind();
-        glBindVertexArray(VAO);
+        _shader.use();
+        _texture.bind();
+        glBindVertexArray(_VAO);
     }
 
     void draw()
     {
-        glDrawElements(GL_TRIANGLES, indices_size_bytes, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
     }
 
 private:
-    float* vertices;
-    uint32_t* indices;
-    uint32_t vertices_size_bytes;
-    uint32_t indices_size_bytes;
-    uint32_t VAO;
-    uint32_t VBO;
-    uint32_t EBO;
-    texture::Texture texture;
+    float* _vertices;
+    uint32_t* _indices;
+    uint32_t _vertices_size_bytes;
+    uint32_t _indices_size_bytes;
+    uint32_t _VAO;
+    uint32_t _VBO;
+    uint32_t _EBO;
+    texture::Texture _texture;
 };
 
 }; // namespace radiance::drawable
