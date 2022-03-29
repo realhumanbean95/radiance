@@ -10,19 +10,3 @@ target_include_directories( math INTERFACE include/ )
 
 target_link_libraries( math INTERFACE project_options glm::glm)
 
-# Executable program configuration
-add_executable(hello-math hello-math.cpp)
-
-target_include_directories(hello-math PRIVATE include/)
-
-target_link_libraries(
-	hello-math 
-	PRIVATE 
-		project_options 
-		radiance::window
-		radiance::shader
-		radiance::drawable
-		radiance::texture
-		glm::glm
-)
-

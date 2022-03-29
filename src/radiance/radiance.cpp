@@ -75,7 +75,14 @@ int main(int argc, const char** argv)
         drawable2->bindContext();
         drawable2->draw(); // in OpenGL, render to back buffer
 
+        float translation_vector[]{ 0.0f, 0.25f, 0.0f };
+        float rotation_vector[]{ 0.0f, 1.0f, 0.0f };
+        float scaling_vector[]{ 0.5, 0.5, 0.5 };
+
         drawable1->bindContext();
+        drawable1->translate(translation_vector);
+        drawable1->rotate(rotation_vector, (float)glfwGetTime());
+        drawable1->scale(scaling_vector); // transformations are reset after each draw
         drawable1->draw(); // in OpenGL, render to back buffer
 
         // call events and swap front and back buffers
