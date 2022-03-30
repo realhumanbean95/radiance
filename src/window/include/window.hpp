@@ -10,6 +10,7 @@ class WindowGLFW
 {
 public:
     WindowGLFW(int width, int height)
+        : _width(width), _height(height)
     {
         /* Initialize the library */
         if (!glfwInit()) {
@@ -23,7 +24,7 @@ public:
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        _window = glfwCreateWindow(width, height, "Hello Radiance!", NULL, NULL);
+        _window = glfwCreateWindow(_width, _height, "Hello Radiance!", NULL, NULL);
         if (_window == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
@@ -43,7 +44,7 @@ public:
 
         // NOTE: I think having this OpenGL call in this class makes the window abstraction leaky...
         // might eventually need to remove glad library as a dependency, only need glfw...
-        glViewport(0, 0, width, height);
+        glViewport(0, 0, _width, _height);
 
     }
     ~WindowGLFW()
@@ -71,6 +72,8 @@ public:
     {
         return glfwWindowShouldClose(_window);
     }
+
+    float _width, _height;
 
 private:
     // NOTE: made static so it could be passed to GLFW as a function pointer

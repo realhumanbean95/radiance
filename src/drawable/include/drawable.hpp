@@ -21,13 +21,11 @@ public:
         _shader.setModelMatrix(_modelMatrix.getDataPtr());
         _shader.setViewMatrix(_viewMatrix.getDataPtr());
         _shader.setProjectionMatrix(_projectionMatrix.getDataPtr());
-        _shader.setModelMatrixUpdate(_modelMatrixUpdate.getDataPtr());
 
         glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
-        //_modelMatrix = rmath::Mat4{};
-        //_viewMatrix = rmath::Mat4{};
-        //_projectionMatrix = rmath::Mat4{};
-        _modelMatrixUpdate = rmath::Mat4{};
+        _modelMatrix = rmath::Mat4{};
+        _viewMatrix = rmath::Mat4{};
+        _projectionMatrix = rmath::Mat4{};
 
     }
 
@@ -37,19 +35,39 @@ public:
 
     virtual void setTexture(rtexture::Texture texture) {};
 
-    void translate(float* translation_vector )
+    void translateWorldSpace(float* translation_vector )
     {
-        _modelMatrixUpdate.translate( translation_vector );
+        _modelMatrix.translate( translation_vector );
     }
 
-    void rotate(float* rotation_vector, float degrees)
+    void rotateWorldSpace(float* rotation_vector, float degrees)
     {
-        _modelMatrixUpdate.rotate(rotation_vector, degrees);
+        _modelMatrix.rotate(rotation_vector, degrees);
     }
 
-    void scale(float* scaling_vector)
+    void scaleWorldSpace(float* scaling_vector)
     {
-        _modelMatrixUpdate.scale(scaling_vector);
+        _modelMatrix.scale(scaling_vector);
+    }
+
+    void translateViewSpace(float* translation_vector)
+    {
+        _viewMatrix.translate(translation_vector);
+    }
+
+    void rotateViewSpace(float* rotation_vector, float degrees)
+    {
+        _viewMatrix.rotate(rotation_vector, degrees);
+    }
+
+    void scaleViewSpace(float* scaling_vector)
+    {
+        _viewMatrix.scale(scaling_vector);
+    }
+
+    void perspectiveClipSpace(float viewportWidth, float viewportHeight)
+    {
+        _projectionMatrix.perspective(viewportWidth, viewportHeight);
     }
 
 protected:
@@ -88,8 +106,6 @@ protected:
     rmath::Mat4 _modelMatrix;
     rmath::Mat4 _viewMatrix;
     rmath::Mat4 _projectionMatrix;
-
-    rmath::Mat4 _modelMatrixUpdate;
 
 };
 

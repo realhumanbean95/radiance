@@ -11,6 +11,18 @@
 // You can modify the source template at `configured_files/config.hpp.in`.
 #include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
 
+static void updateMvpMatrix( radiance::drawable::Drawable& drawable, const radiance::window::WindowGLFW& window )
+{
+
+    float rotation_vector2[]{ 1.0f, 0.0f, 0.0f };
+    float translation_vector2[]{ 0.0f, 0.0f, -3.0f };
+
+    // MVP transformations
+    drawable.translateViewSpace(translation_vector2);
+    drawable.rotateWorldSpace(rotation_vector2, -55.0f);
+    drawable.perspectiveClipSpace(window._width, window._height);
+}
+
 int main(int argc, const char** argv)
 {
     using namespace radiance;
@@ -73,6 +85,7 @@ int main(int argc, const char** argv)
         glClear(GL_COLOR_BUFFER_BIT);
 
         drawable2->bindContext();
+        updateMvpMatrix(*drawable2, window);
         drawable2->draw(); // in OpenGL, render to back buffer
 
         float translation_vector[]{ 0.0f, 0.25f, 0.0f };
@@ -80,9 +93,13 @@ int main(int argc, const char** argv)
         float scaling_vector[]{ 0.5, 0.5, 0.5 };
 
         drawable1->bindContext();
-        drawable1->translate(translation_vector);
-        drawable1->rotate(rotation_vector, (float)glfwGetTime());
-        drawable1->scale(scaling_vector); // transformations are reset after each draw
+
+        updateMvpMatrix(*drawable1, window);
+
+        drawable1->translateWorldSpace(translation_vector);
+        drawable1->rotateWorldSpace(rotation_vector, (float)glfwGetTime() * 35);
+        drawable1->scaleWorldSpace(scaling_vector);
+
         drawable1->draw(); // in OpenGL, render to back buffer
 
         // call events and swap front and back buffers

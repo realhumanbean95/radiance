@@ -22,7 +22,6 @@ namespace radiance::shader
         uint32_t _projection_matrix_location;
         uint32_t _model_matrix_location;
         uint32_t _view_matrix_location;
-        uint32_t _model_matrix_update_location;
 
         // constructor generates the shader on the fly
         // ------------------------------------------------------------------------
@@ -82,7 +81,6 @@ namespace radiance::shader
             _model_matrix_location = glGetUniformLocation(_ID, "modelMatrix");
             _view_matrix_location = glGetUniformLocation(_ID, "viewMatrix");
             _projection_matrix_location = glGetUniformLocation(_ID, "projectionMatrix");
-            _model_matrix_update_location = glGetUniformLocation(_ID, "modelMatrixUpdate");
 
             // delete the shaders as they're linked into our program now and no longer necessary
             glDeleteShader(vertex);
@@ -131,11 +129,6 @@ namespace radiance::shader
         void setProjectionMatrix(float* value) const
         {
             glUniformMatrix4fv(_projection_matrix_location, 1, GL_FALSE, value);
-        }
-
-        void setModelMatrixUpdate(float* value) const
-        {
-            glUniformMatrix4fv(_model_matrix_update_location, 1, GL_FALSE, value);
         }
 
     private:
