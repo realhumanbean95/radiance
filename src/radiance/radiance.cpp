@@ -1,6 +1,8 @@
 #include <iostream>
 #include <array>
 
+#include "data.hpp"
+
 #include "window.hpp"
 #include "drawable.hpp"
 #include "factory.hpp"
@@ -32,100 +34,21 @@ int main(int argc, const char** argv)
 
     window::WindowGLFW window{800, 600};
 
-    // verts for a triangle
-    float vertices1[] = {
-        // positions       // colors
-       -0.5f, -0.5f, 0.0f,  0.18f, 0.01f, 0.31f,   // bottom right
-        0.5f, -0.5f, 0.0f,  0.97f, 0.67f, 0.32f,   // bottom left
-        0.0f,  0.5f, 0.0f,  0.96f, 0.18f, 0.59f    // top 
-    };
-
-    uint32_t indices1[] = {  // note that we start from 0!
-        0, 1, 2,   // first triangle
-    };
-
     drawable::DrawableFactory factory{};
 
+    // instantiate and initialize first drawable
     auto drawable1 = factory.createDrawable(drawable::F3POSF3COL_INDEXED, vertices1, indices1, sizeof(vertices1), sizeof(indices1));
     drawable1->setShader(shader::Shader{});
 
-
-
-    // verts for a quad
-    float vertices2[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-
-    unsigned int indices2[] = {  // note that we start from 0!
-        0, 1, 3,   // first triangle
-        1, 2, 3    // second triangle
-    };
-
+    // instantiate and initialize second drawable
     auto drawable2 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2));
-
-    shader::Shader shader{
-        (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader-texture.vs)") ).c_str(),
-        (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader-texture.fs)") ).c_str() 
-    };
-
-    drawable2->setShader(shader);
-
+    drawable2->setShader(shader::Shader{
+        (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader-texture.vs)")).c_str(),
+        (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader-texture.fs)")).c_str()
+    });
     drawable2->setTexture( texture::Texture{} );
 
     glEnable(GL_DEPTH_TEST);
-
-    std::array<std::array<float, 3>, 10> cubePositions = {
-        std::array<float, 3>{0.0f,  0.0f,  0.0f},
-        std::array<float, 3>{2.0f,  5.0f, -15.0f},
-        std::array<float, 3>{-1.5f, -2.2f, -2.5f},
-        std::array<float, 3>{-3.8f, -2.0f, -12.3f},
-        std::array<float, 3>{2.4f, -0.4f, -3.5f},
-        std::array<float, 3>{-1.7f,  3.0f, -7.5f},
-        std::array<float, 3>{1.3f, -2.0f, -2.5f},
-        std::array<float, 3>{1.5f,  2.0f, -2.5f},
-        std::array<float, 3>{1.5f,  0.2f, -1.5f},
-        std::array<float, 3>{-1.3f,  1.0f, -1.5f}
-    };
 
     while ( !window.shouldClose() )
     {
@@ -138,31 +61,27 @@ int main(int argc, const char** argv)
 
         float translation_vector2[]{ 0.0f, 1.0f, -1.0f };
         float rotation_vector2[]{ 1.0f, 1.0f, 1.0f };
-
-        
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable2->bindContext();
             updateMvpMatrix(*drawable2, window);
-            drawable2->translateWorldSpace(cubePositions[i].data());
+            drawable2->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * i;
             drawable2->rotateWorldSpace(rotation_vector2, ((float)glfwGetTime() + angle) * 25);
             drawable2->draw(); // in OpenGL, render to back buffer
         }
         
-
+        float translation_vector[]{ 0.0f, 0.25f, 1.0f };
+        float rotation_vector[]{ 0.0f, 1.0f, 0.0f };
+        float scaling_vector[]{ 0.5, 0.5, 0.5 };
         for (uint32_t i = 0; i < 10; i++)
         {
-            float translation_vector[]{ 0.0f, 0.25f, 1.0f };
-            float rotation_vector[]{ 0.0f, 1.0f, 0.0f };
-            float scaling_vector[]{ 0.5, 0.5, 0.5 };
-
             drawable1->bindContext();
 
             updateMvpMatrix(*drawable1, window);
 
             drawable1->translateWorldSpace(translation_vector);
-            drawable1->translateWorldSpace(cubePositions[i].data());
+            drawable1->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * (i+1);
             drawable1->rotateWorldSpace(rotation_vector, ((float)glfwGetTime() + angle) * 25);
             drawable1->scaleWorldSpace(scaling_vector);
