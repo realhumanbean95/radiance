@@ -1,4 +1,5 @@
 #include <iostream>
+#include <array>
 
 #include "window.hpp"
 #include "drawable.hpp"
@@ -15,7 +16,7 @@ static void updateMvpMatrix( radiance::drawable::Drawable& drawable, const radia
 {
 
     float rotation_vector2[]{ 1.0f, 0.0f, 0.0f };
-    float translation_vector2[]{ 0.0f, 0.0f, -3.0f };
+    float translation_vector2[]{ 0.0f, 2.0f, -8.0f };
 
     // MVP transformations
     drawable.translateViewSpace(translation_vector2);
@@ -113,6 +114,19 @@ int main(int argc, const char** argv)
 
     glEnable(GL_DEPTH_TEST);
 
+    std::array<std::array<float, 3>, 10> cubePositions = {
+        std::array<float, 3>{0.0f,  0.0f,  0.0f},
+        std::array<float, 3>{2.0f,  5.0f, -15.0f},
+        std::array<float, 3>{-1.5f, -2.2f, -2.5f},
+        std::array<float, 3>{-3.8f, -2.0f, -12.3f},
+        std::array<float, 3>{2.4f, -0.4f, -3.5f},
+        std::array<float, 3>{-1.7f,  3.0f, -7.5f},
+        std::array<float, 3>{1.3f, -2.0f, -2.5f},
+        std::array<float, 3>{1.5f,  2.0f, -2.5f},
+        std::array<float, 3>{1.5f,  0.2f, -1.5f},
+        std::array<float, 3>{-1.3f,  1.0f, -1.5f}
+    };
+
     while ( !window.shouldClose() )
     {
         // input
@@ -125,25 +139,36 @@ int main(int argc, const char** argv)
         float translation_vector2[]{ 0.0f, 1.0f, -1.0f };
         float rotation_vector2[]{ 1.0f, 1.0f, 1.0f };
 
-        drawable2->bindContext();
-        updateMvpMatrix(*drawable2, window);
-        drawable2->translateWorldSpace(translation_vector2);
-        drawable2->rotateWorldSpace(rotation_vector2, (float)glfwGetTime() * 35);
-        drawable2->draw(); // in OpenGL, render to back buffer
+        
+        for (uint32_t i = 0; i < 10; i++)
+        {
+            drawable2->bindContext();
+            updateMvpMatrix(*drawable2, window);
+            drawable2->translateWorldSpace(cubePositions[i].data());
+            float angle = 20.0f * i;
+            drawable2->rotateWorldSpace(rotation_vector2, ((float)glfwGetTime() + angle) * 25);
+            drawable2->draw(); // in OpenGL, render to back buffer
+        }
+        
 
-        float translation_vector[]{ 0.0f, 0.25f, 0.0f };
-        float rotation_vector[]{ 0.0f, 1.0f, 0.0f };
-        float scaling_vector[]{ 0.5, 0.5, 0.5 };
+        for (uint32_t i = 0; i < 10; i++)
+        {
+            float translation_vector[]{ 0.0f, 0.25f, 1.0f };
+            float rotation_vector[]{ 0.0f, 1.0f, 0.0f };
+            float scaling_vector[]{ 0.5, 0.5, 0.5 };
 
-        drawable1->bindContext();
+            drawable1->bindContext();
 
-        updateMvpMatrix(*drawable1, window);
+            updateMvpMatrix(*drawable1, window);
 
-        drawable1->translateWorldSpace(translation_vector);
-        drawable1->rotateWorldSpace(rotation_vector, (float)glfwGetTime() * 35);
-        drawable1->scaleWorldSpace(scaling_vector);
+            drawable1->translateWorldSpace(translation_vector);
+            drawable1->translateWorldSpace(cubePositions[i].data());
+            float angle = 20.0f * (i+1);
+            drawable1->rotateWorldSpace(rotation_vector, ((float)glfwGetTime() + angle) * 25);
+            drawable1->scaleWorldSpace(scaling_vector);
 
-        drawable1->draw(); // in OpenGL, render to back buffer
+            drawable1->draw(); // in OpenGL, render to back buffer
+        }
 
         // call events and swap front and back buffers
         window.swapBuffers();
