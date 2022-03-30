@@ -111,6 +111,8 @@ int main(int argc, const char** argv)
 
     drawable2->setTexture( texture::Texture{} );
 
+    glEnable(GL_DEPTH_TEST);
+
     while ( !window.shouldClose() )
     {
         // input
@@ -118,10 +120,15 @@ int main(int argc, const char** argv)
 
         //render
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        float translation_vector2[]{ 0.0f, 1.0f, -1.0f };
+        float rotation_vector2[]{ 1.0f, 1.0f, 1.0f };
 
         drawable2->bindContext();
         updateMvpMatrix(*drawable2, window);
+        drawable2->translateWorldSpace(translation_vector2);
+        drawable2->rotateWorldSpace(rotation_vector2, (float)glfwGetTime() * 35);
         drawable2->draw(); // in OpenGL, render to back buffer
 
         float translation_vector[]{ 0.0f, 0.25f, 0.0f };
