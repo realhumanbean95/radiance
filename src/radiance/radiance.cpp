@@ -59,7 +59,6 @@ int main(int argc, const char** argv)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        float translation_vector2[]{ 0.0f, 1.0f, -1.0f };
         float rotation_vector2[]{ 1.0f, 1.0f, 1.0f };
         for (uint32_t i = 0; i < 10; i++)
         {
@@ -77,12 +76,10 @@ int main(int argc, const char** argv)
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable1->bindContext();
-
             updateMvpMatrix(*drawable1, window);
-
             drawable1->translateWorldSpace(translation_vector);
             drawable1->translateWorldSpace(objectPositions[i].data());
-            float angle = 20.0f * (i+1);
+            float angle = 20.0f * i;
             drawable1->rotateWorldSpace(rotation_vector, ((float)glfwGetTime() + angle) * 25);
             drawable1->scaleWorldSpace(scaling_vector);
 
