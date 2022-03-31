@@ -11,4 +11,5 @@ target_link_libraries(
 		radiance::shader
 		radiance::drawable
 		radiance::texture
+		radiance::math
 )

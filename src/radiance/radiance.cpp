@@ -8,22 +8,26 @@
 #include "factory.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
+#include "math.hpp"
 
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
 // You can modify the source template at `configured_files/config.hpp.in`.
 #include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
 
-static void updateMvpMatrix( radiance::drawable::Drawable& drawable, const radiance::window::WindowGLFW& window )
-{
+namespace rmath = radiance::math;
 
-    float rotation_vector2[]{ 1.0f, 0.0f, 0.0f };
-    float translation_vector2[]{ 0.0f, 2.0f, -8.0f };
+static void updateCamera(radiance::drawable::Drawable& drawable, const radiance::window::WindowGLFW& window)
+{
+    rmath::Vec3 camera_pos{ 0.0f, 0.0f, 8.0f };
+    rmath::Vec3 camera_target{ 0.0f, 0.0f, 0.0f };
+    rmath::Vec3 camera_dir = rmath::Vec3(camera_pos - camera_target);
+    camera_dir.normalize();
+
+    float translation_vector2[]{ 0.0f, 0.0f, -8.0f };
 
     // MVP transformations
     drawable.translateViewSpace(translation_vector2);
-    drawable.rotateWorldSpace(rotation_vector2, -55.0f);
-    drawable.perspectiveClipSpace(window._width, window._height);
 }
 
 int main(int argc, const char** argv)
@@ -63,10 +67,11 @@ int main(int argc, const char** argv)
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable2->bindContext();
-            updateMvpMatrix(*drawable2, window);
+            updateCamera(*drawable2, window);
             drawable2->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * i;
             drawable2->rotateWorldSpace(rotation_vector2, ((float)glfwGetTime() + angle) * 25);
+            drawable2->perspectiveClipSpace(window._width, window._height);
             drawable2->draw(); // in OpenGL, render to back buffer
         }
         
@@ -76,13 +81,13 @@ int main(int argc, const char** argv)
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable1->bindContext();
-            updateMvpMatrix(*drawable1, window);
+            updateCamera(*drawable1, window);
             drawable1->translateWorldSpace(translation_vector);
             drawable1->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * i;
             drawable1->rotateWorldSpace(rotation_vector, ((float)glfwGetTime() + angle) * 25);
             drawable1->scaleWorldSpace(scaling_vector);
-
+            drawable1->perspectiveClipSpace(window._width, window._height);
             drawable1->draw(); // in OpenGL, render to back buffer
         }
 
