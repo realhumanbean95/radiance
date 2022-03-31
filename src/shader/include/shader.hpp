@@ -19,8 +19,9 @@ namespace radiance::shader
     {
     public:
         unsigned int _ID;
-        uint32_t _world_space_update_matrix_location;
+        uint32_t _projection_matrix_location;
         uint32_t _model_matrix_location;
+        uint32_t _view_matrix_location;
         // constructor generates the shader on the fly
         // ------------------------------------------------------------------------
         Shader(const char* vertexPath = (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader1.vs)")).c_str(),
@@ -75,9 +76,10 @@ namespace radiance::shader
             glLinkProgram(_ID);
             checkCompileErrors(_ID, "PROGRAM");
 
-            // get location of shader's transform uniform
-            _world_space_update_matrix_location = glGetUniformLocation(_ID, "worldSpaceUpdateMatrix");
+            // get location of shader's transform uniforms
             _model_matrix_location = glGetUniformLocation(_ID, "modelMatrix");
+            _view_matrix_location = glGetUniformLocation(_ID, "viewMatrix");
+            _projection_matrix_location = glGetUniformLocation(_ID, "projectionMatrix");
 
             // delete the shaders as they're linked into our program now and no longer necessary
             glDeleteShader(vertex);
@@ -113,16 +115,19 @@ namespace radiance::shader
             glUniformMatrix4fv( location, 1, GL_FALSE, value );
         }
 
-        // might be a good place for a C++20 Mat4 concept...
-        void setWorldSpaceUpdateMatrix(float* value) const
-        {
-            glUniformMatrix4fv(_world_space_update_matrix_location, 1, GL_FALSE, value);
-        }
-
-        // might be a good place for a C++20 Mat4 concept...
         void setModelMatrix(float* value) const
         {
             glUniformMatrix4fv(_model_matrix_location, 1, GL_FALSE, value);
+        }
+
+        void setViewMatrix(float* value) const
+        {
+            glUniformMatrix4fv(_view_matrix_location, 1, GL_FALSE, value);
+        }
+
+        void setProjectionMatrix(float* value) const
+        {
+            glUniformMatrix4fv(_projection_matrix_location, 1, GL_FALSE, value);
         }
 
     private:

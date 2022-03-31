@@ -18,12 +18,15 @@ public:
 
     virtual void draw()
     {
-        _shader.setWorldSpaceUpdateMatrix(_worldSpaceUpdateMatrix.getDataPtr());
         _shader.setModelMatrix(_modelMatrix.getDataPtr());
+        _shader.setViewMatrix(_viewMatrix.getDataPtr());
+        _shader.setProjectionMatrix(_projectionMatrix.getDataPtr());
 
         glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
-        _worldSpaceUpdateMatrix = rmath::Mat4{};
         _modelMatrix = rmath::Mat4{};
+        _viewMatrix = rmath::Mat4{};
+        _projectionMatrix = rmath::Mat4{};
+
     }
 
     virtual void setShader(rshader::Shader shader) {
@@ -34,22 +37,23 @@ public:
 
     void translate(float* translation_vector )
     {
-        _worldSpaceUpdateMatrix.translate( translation_vector );
+        _modelMatrix.translate( translation_vector );
     }
 
     void rotate(float* rotation_vector, float degrees)
     {
-        _worldSpaceUpdateMatrix.rotate(rotation_vector, degrees);
+        _modelMatrix.rotate(rotation_vector, degrees);
     }
 
     void scale(float* scaling_vector)
     {
-        _worldSpaceUpdateMatrix.scale(scaling_vector);
+        _modelMatrix.scale(scaling_vector);
     }
 
     rshader::Shader _shader;
-    rmath::Mat4 _worldSpaceUpdateMatrix;
     rmath::Mat4 _modelMatrix;
+    rmath::Mat4 _viewMatrix;
+    rmath::Mat4 _projectionMatrix;
 
 protected:
     Drawable(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
