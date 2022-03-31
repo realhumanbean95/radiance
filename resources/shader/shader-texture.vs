@@ -4,10 +4,11 @@ layout (location = 1) in vec2 aTexCoord;
 
 out vec2 TexCoord;
 
-uniform mat4 transform;
+uniform mat4 worldSpaceUpdateMatrix;
+uniform mat4 modelMatrix;
 
 void main()
 {
-    gl_Position = transform * vec4(aPos, 1.0f);
+    gl_Position = worldSpaceUpdateMatrix * modelMatrix * vec4(aPos, 1.0f);
     TexCoord = aTexCoord;
 }

@@ -18,9 +18,12 @@ public:
 
     virtual void draw()
     {
-        _shader.setTransform(_worldSpaceUpdateMatrix.getDataPtr());
+        _shader.setWorldSpaceUpdateMatrix(_worldSpaceUpdateMatrix.getDataPtr());
+        _shader.setModelMatrix(_modelMatrix.getDataPtr());
+
         glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
         _worldSpaceUpdateMatrix = rmath::Mat4{};
+        _modelMatrix = rmath::Mat4{};
     }
 
     virtual void setShader(rshader::Shader shader) {
@@ -46,7 +49,7 @@ public:
 
     rshader::Shader _shader;
     rmath::Mat4 _worldSpaceUpdateMatrix;
-    rmath::Mat4 _mvpMatrix;
+    rmath::Mat4 _modelMatrix;
 
 protected:
     Drawable(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
