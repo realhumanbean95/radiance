@@ -15,7 +15,13 @@ class Drawable
 {
 public:
     virtual void bindContext() = 0;
-    virtual void draw() = 0;
+
+    virtual void draw()
+    {
+        _shader.setTransform(_worldSpaceUpdateMatrix.getDataPtr());
+        glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
+        _worldSpaceUpdateMatrix = rmath::Mat4{};
+    }
 
     virtual void setShader(rshader::Shader shader) {
         _shader = shader;
@@ -25,21 +31,22 @@ public:
 
     void translate(float* translation_vector )
     {
-        _transformUpdate.translate( translation_vector );
+        _worldSpaceUpdateMatrix.translate( translation_vector );
     }
 
     void rotate(float* rotation_vector, float degrees)
     {
-        _transformUpdate.rotate(rotation_vector, degrees);
+        _worldSpaceUpdateMatrix.rotate(rotation_vector, degrees);
     }
 
     void scale(float* scaling_vector)
     {
-        _transformUpdate.scale(scaling_vector);
+        _worldSpaceUpdateMatrix.scale(scaling_vector);
     }
 
     rshader::Shader _shader;
-    rmath::Mat4 _transformUpdate;
+    rmath::Mat4 _worldSpaceUpdateMatrix;
+    rmath::Mat4 _mvpMatrix;
 
 protected:
     Drawable(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
@@ -108,13 +115,6 @@ public:
         glBindVertexArray(_VAO);
     }
 
-    void draw()
-    {
-        _shader.setTransform( _transformUpdate.getDataPtr() );
-        glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
-        _transformUpdate = rmath::Mat4{};
-    }
-
 private:
 };
 
@@ -147,11 +147,6 @@ public:
     {
         _shader.use();
         glBindVertexArray(_VAO);
-    }
-
-    void draw()
-    {
-        glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
     }
 
 private:
@@ -195,11 +190,6 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-    }
-
-    void draw()
-    {
-        glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
     }
 
 private:
