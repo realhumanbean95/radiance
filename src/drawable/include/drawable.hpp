@@ -3,11 +3,11 @@
 #include <glad/glad.h>
 #include "shader.hpp"
 #include "texture.hpp"
-#include "math.hpp"
+#include "mat4.hpp"
 
 namespace radiance::drawable
 {
-namespace rmath = radiance::math;
+namespace rmat4 = radiance::math::mat4;
 namespace rshader = radiance::shader;
 namespace rtexture = radiance::texture;
 
@@ -23,9 +23,9 @@ public:
         _shader.setProjectionMatrix(_projectionMatrix.getDataPtr());
 
         glDrawArrays(GL_TRIANGLES, 0, _vertices_size_bytes);
-        _modelMatrix = rmath::Mat4{};
-        _viewMatrix = rmath::Mat4{};
-        _projectionMatrix = rmath::Mat4{};
+        _modelMatrix = rmat4::Mat4{};
+        _viewMatrix = rmat4::Mat4{};
+        _projectionMatrix = rmat4::Mat4{};
 
     }
 
@@ -95,9 +95,9 @@ protected:
     uint32_t _VBO;
 
     rshader::Shader _shader;
-    rmath::Mat4 _modelMatrix;
-    rmath::Mat4 _viewMatrix;
-    rmath::Mat4 _projectionMatrix;
+    rmat4::Mat4 _modelMatrix;
+    rmat4::Mat4 _viewMatrix;
+    rmat4::Mat4 _projectionMatrix;
 
 };
 
@@ -126,9 +126,9 @@ public:
         _shader.setProjectionMatrix(_projectionMatrix.getDataPtr());
 
         glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
-        _modelMatrix = rmath::Mat4{};
-        _viewMatrix = rmath::Mat4{};
-        _projectionMatrix = rmath::Mat4{};
+        _modelMatrix = rmat4::Mat4{};
+        _viewMatrix = rmat4::Mat4{};
+        _projectionMatrix = rmat4::Mat4{};
     }
 
 };

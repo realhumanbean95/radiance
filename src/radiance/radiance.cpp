@@ -8,21 +8,27 @@
 #include "factory.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
-#include "math.hpp"
+#include "vec3.hpp"
 
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
 // You can modify the source template at `configured_files/config.hpp.in`.
 #include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
 
-namespace rmath = radiance::math;
+namespace rvec3 = radiance::math::vec3;
 
 static void updateCamera(radiance::drawable::Drawable& drawable, const radiance::window::WindowGLFW& window)
 {
-    rmath::Vec3 camera_pos{ 0.0f, 0.0f, 8.0f };
-    rmath::Vec3 camera_target{ 0.0f, 0.0f, 0.0f };
-    rmath::Vec3 camera_dir = rmath::Vec3(camera_pos - camera_target);
+    rvec3::Vec3 camera_pos{ 0.0f, 0.0f, 8.0f };
+    rvec3::Vec3 camera_target{ 0.0f, 0.0f, 0.0f };
+    rvec3::Vec3 camera_dir = rvec3::Vec3(camera_pos - camera_target);
     camera_dir.normalize();
+
+    rvec3::Vec3 up{ 0.0f, 1.0f, 0.0f };
+    rvec3::Vec3 camera_right = rvec3::cross(up, camera_dir);
+    camera_right.normalize();
+
+    rvec3::Vec3 camera_up = rvec3::cross(camera_dir, camera_right);
 
     float translation_vector2[]{ 0.0f, 0.0f, -8.0f };
 
