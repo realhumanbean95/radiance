@@ -40,36 +40,53 @@ public:
 
     rshader::Shader _shader;
     rmath::Mat4 _transformUpdate;
+
+protected:
+    Drawable(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
+        : _vertices{ vertices }, _indices{ indices }, _vertices_size_bytes{ vertices_size_bytes }, _indices_size_bytes{ indices_size_bytes }
+    {
+        /******************** bind Vertex Array Object ********************************************/
+        // generate a Vertex Attribute Object
+        // Core OpenGL requires that we use a _VAO so it knows what to do with our vertex inputs.
+        // If we fail to bind a _VAO, OpenGL will most likely refuse to draw anything.
+        /*******************************************************************************************/
+        glGenVertexArrays(1, &_VAO);
+        glBindVertexArray(_VAO);
+
+        /************** copy our vertices array in a vertex buffer for OpenGL to use ***************/
+        glGenBuffers(1, &_VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, vertices, GL_STATIC_DRAW);
+
+        /*************** copy our index array in a element buffer for OpenGL to use ****************/
+        glGenBuffers(1, &_EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, indices, GL_STATIC_DRAW);
+    }
+
+    float* _vertices;
+    uint32_t* _indices;
+    uint32_t _vertices_size_bytes;
+    uint32_t _indices_size_bytes;
+    uint32_t _VAO;
+    uint32_t _VBO;
+    uint32_t _EBO;
 };
 
 class Drawable_F3POSF3COL : public Drawable
 {
 public:
     Drawable_F3POSF3COL(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
-        : _vertices{ vertices }, _indices{ indices }, _vertices_size_bytes{ vertices_size_bytes }, _indices_size_bytes{ indices_size_bytes }
+        : Drawable( vertices, indices, vertices_size_bytes, indices_size_bytes)
     {
-        // 1. bind Vertex Array Object
-        // generate a Vertex Attribute Object
-        // Core OpenGL requires that we use a _VAO so it knows what to do with our vertex inputs.
-        // If we fail to bind a _VAO, OpenGL will most likely refuse to draw anything.
-        glGenVertexArrays(1, &_VAO);
-        glBindVertexArray(_VAO);
 
-        // 2. copy our vertices array in a vertex buffer for OpenGL to use
-        glGenBuffers(1, &_VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, vertices, GL_STATIC_DRAW);
+        /****************** set the vertex attributes pointers (vertex semantic) *******************/
 
-        //// 3. copy our index array in a element buffer for OpenGL to use
-        glGenBuffers(1, &_EBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, indices, GL_STATIC_DRAW);
-
-        //// 4. then set the vertex attributes pointers (vertex semantic)
+        // position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
-        // 5. color attribute
+        // color attribute
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
@@ -99,39 +116,18 @@ public:
     }
 
 private:
-    float* _vertices;
-    uint32_t* _indices;
-    uint32_t _vertices_size_bytes;
-    uint32_t _indices_size_bytes;
-    uint32_t _VAO;
-    uint32_t _VBO;
-    uint32_t _EBO;
 };
 
 class Drawable_F3POS : public Drawable
 {
 public:
     Drawable_F3POS(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
-        : _vertices{ vertices }, _indices{ indices }, _vertices_size_bytes{ vertices_size_bytes }, _indices_size_bytes{ indices_size_bytes }
+        : Drawable(vertices, indices, vertices_size_bytes, indices_size_bytes)
     {
-        // 1. bind Vertex Array Object
-        // generate a Vertex Attribute Object
-        // Core OpenGL requires that we use a _VAO so it knows what to do with our vertex inputs.
-        // If we fail to bind a _VAO, OpenGL will most likely refuse to draw anything.
-        glGenVertexArrays(1, &_VAO);
-        glBindVertexArray(_VAO);
 
-        // 2. copy our vertices array in a vertex buffer for OpenGL to use
-        glGenBuffers(1, &_VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, vertices, GL_STATIC_DRAW);
+        /****************** set the vertex attributes pointers (vertex semantic) *******************/
 
-        //// 3. copy our index array in a element buffer for OpenGL to use
-        glGenBuffers(1, &_EBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, indices, GL_STATIC_DRAW);
-
-        //// 4. then set the vertex attributes pointers (vertex semantic)
+        // position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
@@ -159,39 +155,17 @@ public:
     }
 
 private:
-    float* _vertices;
-    uint32_t* _indices;
-    uint32_t _vertices_size_bytes;
-    uint32_t _indices_size_bytes;
-    uint32_t _VAO;
-    uint32_t _VBO;
-    uint32_t _EBO;
 };
 
 class Drawable_F3POSF2TEX : public Drawable
 {
 public:
-    Drawable_F3POSF2TEX(float* vertices, uint32_t* _indices, uint32_t vertices_size_bytes, uint32_t _indices_size_bytes)
-        : _vertices{ vertices }, _indices{ _indices }, _vertices_size_bytes{ vertices_size_bytes }, _indices_size_bytes{ _indices_size_bytes }
+    Drawable_F3POSF2TEX(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
+        : Drawable(vertices, indices, vertices_size_bytes, indices_size_bytes)
     {
-        // 1. bind Vertex Array Object
-        // generate a Vertex Attribute Object
-        // Core OpenGL requires that we use a _VAO so it knows what to do with our vertex inputs.
-        // If we fail to bind a _VAO, OpenGL will most likely refuse to draw anything.
-        glGenVertexArrays(1, &_VAO);
-        glBindVertexArray(_VAO);
 
-        // 2. copy our vertices array in a vertex buffer for OpenGL to use
-        glGenBuffers(1, &_VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-        glBufferData(GL_ARRAY_BUFFER, _vertices_size_bytes, _vertices, GL_STATIC_DRAW);
-
-        //// 3. copy our index array in a element buffer for OpenGL to use
-        glGenBuffers(1, &_EBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, _indices, GL_STATIC_DRAW);
-
-        //// 4. then set the vertex attributes pointers (vertex semantic)
+        /****************** set the vertex attributes pointers (vertex semantic) *******************/
+        
         // position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
@@ -229,13 +203,6 @@ public:
     }
 
 private:
-    float* _vertices;
-    uint32_t* _indices;
-    uint32_t _vertices_size_bytes;
-    uint32_t _indices_size_bytes;
-    uint32_t _VAO;
-    uint32_t _VBO;
-    uint32_t _EBO;
     texture::Texture _texture;
 };
 
