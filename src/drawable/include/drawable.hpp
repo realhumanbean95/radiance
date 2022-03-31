@@ -50,11 +50,6 @@ public:
         _modelMatrix.scale(scaling_vector);
     }
 
-    rshader::Shader _shader;
-    rmath::Mat4 _modelMatrix;
-    rmath::Mat4 _viewMatrix;
-    rmath::Mat4 _projectionMatrix;
-
 protected:
     Drawable(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
         : _vertices{ vertices }, _indices{ indices }, _vertices_size_bytes{ vertices_size_bytes }, _indices_size_bytes{ indices_size_bytes }
@@ -85,6 +80,11 @@ protected:
     uint32_t _VAO;
     uint32_t _VBO;
     uint32_t _EBO;
+
+    rshader::Shader _shader;
+    rmath::Mat4 _modelMatrix;
+    rmath::Mat4 _viewMatrix;
+    rmath::Mat4 _projectionMatrix;
 };
 
 class Drawable_F3POSF3COL : public Drawable
