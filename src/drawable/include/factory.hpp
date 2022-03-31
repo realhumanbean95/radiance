@@ -37,6 +37,7 @@ namespace radiance::drawable
             }
         }
 
+        // overload for instantiating un-indexed drawables
         Drawable* createDrawable(
             VertexSemantic vertexSemantic,
             float* _vertices,
