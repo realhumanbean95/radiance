@@ -16,7 +16,7 @@ namespace radiance::math::mat4
     {
     public:
 
-        Mat4(float* mat4)
+        Mat4(const float mat4[16])
         {
             _matrix = glm::make_mat4(mat4);
         }
@@ -32,17 +32,17 @@ namespace radiance::math::mat4
             return Mat4{ glm::value_ptr(result) };
         }
 
-        void translate(float* translation_vector)
+        void translate(const float translation_vector[3])
         {
             _matrix = glm::translate(_matrix, glm::make_vec3(translation_vector));
         }
 
-        void rotate(float* rotation_vector, float degrees)
+        void rotate(const float rotation_vector[3], float degrees)
         {
             _matrix = glm::rotate(_matrix, glm::radians(degrees), glm::make_vec3(rotation_vector));
         }
 
-        void scale(float* scaling_vector)
+        void scale(const float scaling_vector[3])
         {
             _matrix = glm::scale(_matrix, glm::make_vec3(scaling_vector));
         }
