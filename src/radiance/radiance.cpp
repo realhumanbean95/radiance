@@ -8,17 +8,12 @@
 #include "factory.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
-#include "vec3.hpp"
-#include "mat4.hpp"
 #include "fly-camera.hpp"
 
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
 // You can modify the source template at `configured_files/config.hpp.in`.
 #include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
-
-namespace rvec3 = radiance::math::vec3;
-namespace rmat4 = radiance::math::mat4;
 
 int main(int argc, const char** argv)
 {
