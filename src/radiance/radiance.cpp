@@ -9,15 +9,15 @@
 #include "shader.hpp"
 #include "texture.hpp"
 #include "vec3.hpp"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "mat4.hpp"
 
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
 // You can modify the source template at `configured_files/config.hpp.in`.
 #include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
+
+namespace rvec3 = radiance::math::vec3;
+namespace rmat4 = radiance::math::mat4;
 
 int main(int argc, const char** argv)
 {
@@ -44,9 +44,9 @@ int main(int argc, const char** argv)
     glEnable(GL_DEPTH_TEST);
 
     // camera
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    rvec3::Vec3 cameraPos{ 0.0f, 0.0f, 3.0f };
+    rvec3::Vec3 cameraFront{ 0.0f, 0.0f, -1.0 };
+    rvec3::Vec3 cameraUp{ 0.0f, 1.0f, 0.0f };
 
     float deltaTime = 0.0f;	// time between current frame and last frame
     float lastFrame = 0.0f;
@@ -79,18 +79,22 @@ int main(int argc, const char** argv)
             { 
                 std::cout << "A" << std::endl;
                 float cameraSpeed = static_cast<float>(2.5 * deltaTime);
-                cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+                rvec3::Vec3 tmp = rvec3::cross(cameraFront, cameraUp);
+                tmp.normalize();
+                cameraPos -= tmp * cameraSpeed;
             },
             [&cameraPos, &cameraFront, &cameraUp, &deltaTime]
             () 
             {
                 std::cout << "D" << std::endl;
                 float cameraSpeed = static_cast<float>(2.5 * deltaTime);
-                cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+                rvec3::Vec3 tmp = rvec3::cross(cameraFront, cameraUp);
+                tmp.normalize();
+                cameraPos += tmp * cameraSpeed;
             }
         );
 
-        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        rmat4::Mat4 view = rmat4::lookAt(cameraPos._data, (cameraPos + cameraFront)._data, cameraUp._data);
 
         //render
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

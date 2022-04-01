@@ -69,4 +69,9 @@ namespace radiance::math::mat4
         {}
     };
 
+    Mat4 lookAt(float eye[3], float center[3], float up[3])
+    {
+        return Mat4{ glm::value_ptr(glm::lookAt(glm::make_vec3(eye), glm::make_vec3(center), glm::make_vec3(up))) };
+    }
+
 } // namespace radiance::math::mat4

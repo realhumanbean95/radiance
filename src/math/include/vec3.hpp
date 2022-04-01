@@ -23,6 +23,24 @@ namespace radiance::math::vec3
             _vector = glm::make_vec3(_data);
         }
 
+        Vec3& operator+=(const Vec3& rhs)
+        {
+            this->_data[0] += rhs._data[0];
+            this->_data[1] += rhs._data[1];
+            this->_data[2] += rhs._data[2];
+            this->_vector += rhs._vector;
+            return *this;
+        }
+
+        Vec3& operator-=(const Vec3& rhs)
+        {
+            this->_data[0] -= rhs._data[0];
+            this->_data[1] -= rhs._data[1];
+            this->_data[2] -= rhs._data[2];
+            this->_vector -= rhs._vector;
+            return *this;
+        }
+
         void normalize()
         {
             _vector = glm::normalize(_vector);

@@ -70,9 +70,9 @@ public:
         _projectionMatrix.perspective(viewportWidth, viewportHeight);
     }
 
-    void setViewMatrix(const glm::mat4& matrix)
+    void setViewMatrix(const rmat4::Mat4& matrix)
     {
-        _viewMatrix = rmat4::Mat4{ glm::value_ptr(matrix) };
+        _viewMatrix = matrix;
     }
 
 protected:
