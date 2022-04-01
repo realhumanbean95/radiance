@@ -70,6 +70,11 @@ public:
         _projectionMatrix.perspective(viewportWidth, viewportHeight);
     }
 
+    void setViewMatrix(const glm::mat4& matrix)
+    {
+        _viewMatrix = rmat4::Mat4{ glm::value_ptr(matrix) };
+    }
+
 protected:
     Drawable(float* vertices, uint32_t vertices_size_bytes)
         : _vertices{ vertices }, _vertices_size_bytes{ vertices_size_bytes }

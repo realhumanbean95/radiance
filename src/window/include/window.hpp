@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -52,10 +54,22 @@ public:
         glfwTerminate(); 
     }
 
-    void processInput()
+    void processInput(
+        std::function<void()> onWPress,
+        std::function<void()> onSPress,
+        std::function<void()> onAPress,
+        std::function<void()> onDPress)
     {
         if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(_window, true);
+        if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
+            onWPress();
+        if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS)
+            onSPress();
+        if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
+            onAPress();
+        if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
+            onDPress();
     }
 
     void swapBuffers()

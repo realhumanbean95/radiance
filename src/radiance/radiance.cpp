@@ -10,31 +10,14 @@
 #include "texture.hpp"
 #include "vec3.hpp"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
 // You can modify the source template at `configured_files/config.hpp.in`.
 #include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
-
-namespace rvec3 = radiance::math::vec3;
-
-static void updateCamera(radiance::drawable::Drawable& drawable, const radiance::window::WindowGLFW& window)
-{
-    rvec3::Vec3 camera_pos{ 0.0f, 0.0f, 8.0f };
-    rvec3::Vec3 camera_target{ 0.0f, 0.0f, 0.0f };
-    rvec3::Vec3 camera_dir = rvec3::Vec3(camera_pos - camera_target);
-    camera_dir.normalize();
-
-    rvec3::Vec3 up{ 0.0f, 1.0f, 0.0f };
-    rvec3::Vec3 camera_right = rvec3::cross(up, camera_dir);
-    camera_right.normalize();
-
-    rvec3::Vec3 camera_up = rvec3::cross(camera_dir, camera_right);
-
-    float translation_vector2[]{ 0.0f, 0.0f, -8.0f };
-
-    // MVP transformations
-    drawable.translateViewSpace(translation_vector2);
-}
 
 int main(int argc, const char** argv)
 {
@@ -60,10 +43,54 @@ int main(int argc, const char** argv)
 
     glEnable(GL_DEPTH_TEST);
 
+    // camera
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    float deltaTime = 0.0f;	// time between current frame and last frame
+    float lastFrame = 0.0f;
+
     while ( !window.shouldClose() )
     {
+
+        float currentFrame = static_cast<float>(glfwGetTime());
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         // input
-        window.processInput();
+        window.processInput(
+            [&cameraPos, &cameraFront, &cameraUp, &deltaTime]
+            () 
+            { 
+                std::cout << "W" << std::endl;
+                float cameraSpeed = static_cast<float>(2.5 * deltaTime);
+                cameraPos += cameraSpeed * cameraFront;
+            },
+            [&cameraPos, &cameraFront, &cameraUp, &deltaTime]
+            ()
+            { 
+                std::cout << "S" << std::endl;
+                float cameraSpeed = static_cast<float>(2.5 * deltaTime);
+                cameraPos -= cameraSpeed * cameraFront;
+            },
+            [&cameraPos, &cameraFront, &cameraUp, &deltaTime]
+            ()
+            { 
+                std::cout << "A" << std::endl;
+                float cameraSpeed = static_cast<float>(2.5 * deltaTime);
+                cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+            },
+            [&cameraPos, &cameraFront, &cameraUp, &deltaTime]
+            () 
+            {
+                std::cout << "D" << std::endl;
+                float cameraSpeed = static_cast<float>(2.5 * deltaTime);
+                cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+            }
+        );
+
+        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
         //render
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -73,7 +100,7 @@ int main(int argc, const char** argv)
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable2->bindContext();
-            updateCamera(*drawable2, window);
+            drawable2->setViewMatrix(view);
             drawable2->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * i;
             drawable2->rotateWorldSpace(rotation_vector2, ((float)glfwGetTime() + angle) * 25);
@@ -87,7 +114,7 @@ int main(int argc, const char** argv)
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable1->bindContext();
-            updateCamera(*drawable1, window);
+            drawable1->setViewMatrix(view);
             drawable1->translateWorldSpace(translation_vector);
             drawable1->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * i;

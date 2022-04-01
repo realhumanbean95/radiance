@@ -21,6 +21,11 @@ namespace radiance::math::mat4
             _matrix = glm::make_mat4(mat4);
         }
 
+        Mat4(const Mat4& matrix)
+        {
+            _matrix = matrix._matrix;
+        }
+
         Mat4()
         {
             _matrix = glm::mat4(1.0f);
