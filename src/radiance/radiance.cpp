@@ -47,7 +47,7 @@ int main(int argc, const char** argv)
 
     while ( !window.shouldClose() )
     {
-
+        // per-frame time calculations
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -100,7 +100,7 @@ int main(int argc, const char** argv)
         window.swapBuffers();
         window.pollEvents();
 
-        // 5 unbind vertex array
+        // unbind vertex array
         glBindVertexArray(0);
     }
 
