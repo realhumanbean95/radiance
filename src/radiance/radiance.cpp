@@ -64,8 +64,6 @@ int main(int argc, const char** argv)
             { camera.moveRight(static_cast<float>(2.5 * deltaTime)); }
         );
 
-        //camera.computeViewMatrix(camera.cameraPos, (camera.cameraPos + camera.cameraFront), camera.cameraUp);
-
         //render
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
