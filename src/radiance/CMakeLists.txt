@@ -12,4 +12,5 @@ target_link_libraries(
 		radiance::drawable
 		radiance::texture
 		radiance::math
+		radiance::camera
 )

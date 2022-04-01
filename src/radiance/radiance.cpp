@@ -10,6 +10,7 @@
 #include "texture.hpp"
 #include "vec3.hpp"
 #include "mat4.hpp"
+#include "fly-camera.hpp"
 
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
@@ -44,9 +45,7 @@ int main(int argc, const char** argv)
     glEnable(GL_DEPTH_TEST);
 
     // camera
-    rvec3::Vec3 cameraPos{ 0.0f, 0.0f, 3.0f };
-    rvec3::Vec3 cameraFront{ 0.0f, 0.0f, -1.0 };
-    rvec3::Vec3 cameraUp{ 0.0f, 1.0f, 0.0f };
+    radiance::camera::FlyCamera camera{};
 
     float deltaTime = 0.0f;	// time between current frame and last frame
     float lastFrame = 0.0f;
@@ -60,41 +59,17 @@ int main(int argc, const char** argv)
 
         // input
         window.processInput(
-            [&cameraPos, &cameraFront, &cameraUp, &deltaTime]
-            () 
-            { 
-                std::cout << "W" << std::endl;
-                float cameraSpeed = static_cast<float>(2.5 * deltaTime);
-                cameraPos += cameraSpeed * cameraFront;
-            },
-            [&cameraPos, &cameraFront, &cameraUp, &deltaTime]
-            ()
-            { 
-                std::cout << "S" << std::endl;
-                float cameraSpeed = static_cast<float>(2.5 * deltaTime);
-                cameraPos -= cameraSpeed * cameraFront;
-            },
-            [&cameraPos, &cameraFront, &cameraUp, &deltaTime]
-            ()
-            { 
-                std::cout << "A" << std::endl;
-                float cameraSpeed = static_cast<float>(2.5 * deltaTime);
-                rvec3::Vec3 tmp = rvec3::cross(cameraFront, cameraUp);
-                tmp.normalize();
-                cameraPos -= tmp * cameraSpeed;
-            },
-            [&cameraPos, &cameraFront, &cameraUp, &deltaTime]
-            () 
-            {
-                std::cout << "D" << std::endl;
-                float cameraSpeed = static_cast<float>(2.5 * deltaTime);
-                rvec3::Vec3 tmp = rvec3::cross(cameraFront, cameraUp);
-                tmp.normalize();
-                cameraPos += tmp * cameraSpeed;
-            }
+            [&camera, &deltaTime]() 
+            { camera.moveForward(static_cast<float>(2.5 * deltaTime)); },
+            [&camera, &deltaTime]()
+            { camera.moveBackward(static_cast<float>(2.5 * deltaTime)); },
+            [&camera, &deltaTime]()
+            { camera.moveLeft(static_cast<float>(2.5 * deltaTime)); },
+            [&camera, &deltaTime]() 
+            { camera.moveRight(static_cast<float>(2.5 * deltaTime)); }
         );
 
-        rmat4::Mat4 view = rmat4::lookAt(cameraPos._data, (cameraPos + cameraFront)._data, cameraUp._data);
+        //camera.computeViewMatrix(camera.cameraPos, (camera.cameraPos + camera.cameraFront), camera.cameraUp);
 
         //render
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -104,7 +79,7 @@ int main(int argc, const char** argv)
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable2->bindContext();
-            drawable2->setViewMatrix(view);
+            drawable2->setViewMatrix(camera._viewMatrix);
             drawable2->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * i;
             drawable2->rotateWorldSpace(rotation_vector2, ((float)glfwGetTime() + angle) * 25);
@@ -118,7 +93,7 @@ int main(int argc, const char** argv)
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable1->bindContext();
-            drawable1->setViewMatrix(view);
+            drawable1->setViewMatrix(camera._viewMatrix);
             drawable1->translateWorldSpace(translation_vector);
             drawable1->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * i;
