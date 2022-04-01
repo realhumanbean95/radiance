@@ -23,11 +23,6 @@ namespace radiance::math::vec3
             _vector = glm::make_vec3(_data);
         }
 
-        Vec3 operator-(const Vec3& vec)
-        {
-            return Vec3{ _vector - vec._vector };
-        }
-
         void normalize()
         {
             _vector = glm::normalize(_vector);
@@ -41,27 +36,63 @@ namespace radiance::math::vec3
             return _size;
         }
 
-        const float* data()
-        {
-            return _data;
-        }
+        const uint32_t _size = 3;
+        float _data[3];
 
     private:
-        float _data[3];
+        
         glm::vec3 _vector;
-        const uint32_t _size = 3;
 
         Vec3(glm::vec3 vec)
         {
+            _data[0] = vec.x;
+            _data[1] = vec.y;
+            _data[2] = vec.z;
             _vector = vec;
         }
     };
 
+    Vec3 operator-(const Vec3& vec1, const Vec3& vec2)
+    {
+        return Vec3{ 
+            vec1._data[0] - vec2._data[0],
+            vec1._data[1] - vec2._data[1],
+            vec1._data[2] - vec2._data[2]
+        };
+    }
+
+    Vec3 operator+(const Vec3& vec1, const Vec3& vec2)
+    {
+        return Vec3{
+            vec1._data[0] + vec2._data[0],
+            vec1._data[1] + vec2._data[1],
+            vec1._data[2] + vec2._data[2]
+        };
+    }
+
+    Vec3 operator*(const Vec3& vec, float scalar)
+    {
+        return Vec3{
+            vec._data[0] * scalar,
+            vec._data[1] * scalar,
+            vec._data[2] * scalar
+        };
+    }
+
+    Vec3 operator*(float scalar, const Vec3& vec)
+    {
+        return Vec3{
+            vec._data[0] * scalar,
+            vec._data[1] * scalar,
+            vec._data[2] * scalar
+        };
+    }
+
     static Vec3 cross(Vec3 vec1, Vec3 vec2)
     {
         glm::vec3 cross_product = glm::cross(
-            glm::make_vec3( vec1.data() ),
-            glm::make_vec3( vec2.data() ));
+            glm::make_vec3( vec1._data ),
+            glm::make_vec3( vec2._data ));
         
         return Vec3{ cross_product.x, cross_product.y, cross_product.z };
     }
