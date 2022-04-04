@@ -18,50 +18,54 @@ namespace radiance::math::mat4
 
         Mat4(const float mat4[16])
         {
-            _matrix = glm::make_mat4(mat4);
+            memcpy(_data, mat4, _size_in_bytes);
         }
-
-        Mat4(const Mat4& matrix)
-        {
-            _matrix = matrix._matrix;
-        }
-
+        
         Mat4()
         {
-            _matrix = glm::mat4(1.0f);
+            memcpy(_data, glm::value_ptr(glm::mat4(1.0f)), _size_in_bytes);
         }
 
         Mat4 operator*( const Mat4& mat4 )
         {
-            glm::mat4 result = _matrix * mat4._matrix;
+            glm::mat4 result = glm::make_mat4(_data) * glm::make_mat4(mat4._data);
             return Mat4{ glm::value_ptr(result) };
         }
 
         void translate(const float translation_vector[3])
         {
-            _matrix = glm::translate(_matrix, glm::make_vec3(translation_vector));
+            glm::mat4 matrix = glm::translate(glm::make_mat4(_data), glm::make_vec3(translation_vector));
+            memcpy(_data, glm::value_ptr(matrix), _size_in_bytes);
         }
 
         void rotate(const float rotation_vector[3], float degrees)
         {
-            _matrix = glm::rotate(_matrix, glm::radians(degrees), glm::make_vec3(rotation_vector));
+            glm::mat4 matrix = glm::rotate(glm::make_mat4(_data), glm::radians(degrees), glm::make_vec3(rotation_vector));
+            memcpy(_data, glm::value_ptr(matrix), _size_in_bytes);
+
         }
 
         void scale(const float scaling_vector[3])
         {
-            _matrix = glm::scale(_matrix, glm::make_vec3(scaling_vector));
+            glm::mat4 matrix = glm::scale(glm::make_mat4(_data), glm::make_vec3(scaling_vector));
+            memcpy(_data, glm::value_ptr(matrix), _size_in_bytes);
+
         }
 
         float* getDataPtr()
         {
-            return glm::value_ptr(_matrix);
+            return _data;
         }
 
+        const static uint32_t _size = 16;
+        const static uint32_t _size_in_bytes = _size * sizeof(float);
+        float _data[_size];
     private:
-        glm::mat4 _matrix;
 
-        Mat4(glm::mat4 mat4) : _matrix( mat4 )
-        {}
+        Mat4(glm::mat4 mat4)
+        {
+            memcpy(_data, glm::value_ptr(mat4), _size_in_bytes);
+        }
     };
 
     Mat4 lookAt(float eye[3], float center[3], float up[3])
