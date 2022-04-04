@@ -133,11 +133,11 @@ public:
         /****************** set the vertex attributes pointers (vertex semantic) *******************/
 
         // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_positionOffsetBytes);
+        glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, reinterpret_cast<void*>(_positionOffsetBytes) );
         glEnableVertexAttribArray(0);
 
         // color attribute
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_colorOffsetBytes);
+        glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, reinterpret_cast<void*>(_colorOffsetBytes) );
         glEnableVertexAttribArray(1);
 
         // unbind buffers, rebind explicitly when you want to draw this drawable
@@ -158,9 +158,9 @@ public:
         glBindVertexArray(_VAO);
     }
 
-    static constexpr uint32_t _positionOffsetBytes = 0;
-    static constexpr uint32_t _colorOffsetBytes = (3 * sizeof(float));
-    static constexpr uint32_t _vertexSizeBytes = 6 * sizeof(float);
+    static constexpr size_t _positionOffsetBytes = 0;
+    static constexpr size_t _colorOffsetBytes = (3 * sizeof(float));
+    static constexpr size_t _vertexSizeBytes = 6 * sizeof(float);
 
 };
 
@@ -174,7 +174,7 @@ public:
         /****************** set the vertex attributes pointers (vertex semantic) *******************/
 
         // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_positionOffsetBytes);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, reinterpret_cast<void*>(_positionOffsetBytes) );
         glEnableVertexAttribArray(0);
 
         // unbind buffers, rebind explicitly when you want to draw this drawable
@@ -195,8 +195,8 @@ public:
         glBindVertexArray(_VAO);
     }
 
-    static constexpr uint32_t _positionOffsetBytes = 0;
-    static constexpr uint32_t _vertexSizeBytes = 3 * sizeof(float);
+    static constexpr size_t _positionOffsetBytes = 0;
+    static constexpr size_t _vertexSizeBytes = 3 * sizeof(float);
 };
 
 class Drawable_F3POSF2TEX_Indexed : public DrawableIndexed
@@ -209,11 +209,11 @@ public:
         /****************** set the vertex attributes pointers (vertex semantic) *******************/
         
         // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_positionOffsetBytes);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, reinterpret_cast<void*>(_positionOffsetBytes) );
         glEnableVertexAttribArray(0);
 
         // texture coordinate attribute
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_texCoordOffsetBytes);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, _vertexSizeBytes, reinterpret_cast<void*>(_texCoordOffsetBytes) );
         glEnableVertexAttribArray(1);
 
         // unbind buffers, rebind explicitly when you want to draw this drawable
@@ -240,9 +240,9 @@ public:
     }
 
 
-    static constexpr uint32_t _positionOffsetBytes = 0;
-    static constexpr uint32_t _texCoordOffsetBytes = (3 * sizeof(float));
-    static constexpr uint32_t _vertexSizeBytes = 5 * sizeof(float);
+    static constexpr size_t _positionOffsetBytes = 0;
+    static constexpr size_t _texCoordOffsetBytes = (3 * sizeof(float));
+    static constexpr size_t _vertexSizeBytes = 5 * sizeof(float);
 
     texture::Texture _texture;
 };
@@ -257,11 +257,11 @@ public:
         /****************** set the vertex attributes pointers (vertex semantic) *******************/
 
         // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_positionOffsetBytes);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, reinterpret_cast<void*>(_positionOffsetBytes) );
         glEnableVertexAttribArray(0);
 
         // texture coordinate attribute
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_texCoordOffsetBytes);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, _vertexSizeBytes, reinterpret_cast<void*>(_texCoordOffsetBytes) );
         glEnableVertexAttribArray(1);
 
         // unbind buffers, rebind explicitly when you want to draw this drawable
@@ -286,9 +286,9 @@ public:
         glBindVertexArray(_VAO);
     }
 
-    static constexpr uint32_t _positionOffsetBytes = 0;
-    static constexpr uint32_t _texCoordOffsetBytes = (3 * sizeof(float));
-    static constexpr uint32_t _vertexSizeBytes = 5 * sizeof(float);
+    static constexpr size_t _positionOffsetBytes = 0;
+    static constexpr size_t _texCoordOffsetBytes = (3 * sizeof(float));
+    static constexpr size_t _vertexSizeBytes = 5 * sizeof(float);
 
     texture::Texture _texture;
 };
