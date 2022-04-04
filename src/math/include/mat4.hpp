@@ -60,6 +60,7 @@ namespace radiance::math::mat4
         const static uint32_t _size = 16;
         const static uint32_t _size_in_bytes = _size * sizeof(float);
         float _data[_size];
+
     private:
 
         Mat4(glm::mat4 mat4)
