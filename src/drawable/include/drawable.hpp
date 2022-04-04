@@ -35,39 +35,24 @@ public:
 
     virtual void setTexture(rtexture::Texture texture) {};
 
-    void translateWorldSpace(float* translation_vector )
+    void translate(float* translation_vector )
     {
         _modelMatrix.translate( translation_vector );
     }
 
-    void rotateWorldSpace(float* rotation_vector, float degrees)
+    void rotate(float* rotation_vector, float degrees)
     {
         _modelMatrix.rotate(rotation_vector, degrees);
     }
 
-    void scaleWorldSpace(float* scaling_vector)
+    void scale(float* scaling_vector)
     {
         _modelMatrix.scale(scaling_vector);
     }
 
-    void translateViewSpace(float* translation_vector)
+    void setProjectionMatrix(rmat4::Mat4 matrix)
     {
-        _viewMatrix.translate(translation_vector);
-    }
-
-    void rotateViewSpace(float* rotation_vector, float degrees)
-    {
-        _viewMatrix.rotate(rotation_vector, degrees);
-    }
-
-    void scaleViewSpace(float* scaling_vector)
-    {
-        _viewMatrix.scale(scaling_vector);
-    }
-
-    void perspectiveClipSpace(float viewportWidth, float viewportHeight)
-    {
-        _projectionMatrix.perspective(viewportWidth, viewportHeight);
+        _projectionMatrix = matrix;
     }
 
     void setViewMatrix(const rmat4::Mat4& matrix)

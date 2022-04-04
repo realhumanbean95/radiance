@@ -52,11 +52,6 @@ namespace radiance::math::mat4
             _matrix = glm::scale(_matrix, glm::make_vec3(scaling_vector));
         }
 
-        void perspective(float viewportWidth, float viewportHeight)
-        {
-            _matrix = glm::perspective(glm::radians(45.0f), viewportWidth / viewportHeight, 0.1f, 100.0f);
-        }
-
         float* getDataPtr()
         {
             return glm::value_ptr(_matrix);
@@ -72,6 +67,11 @@ namespace radiance::math::mat4
     Mat4 lookAt(float eye[3], float center[3], float up[3])
     {
         return Mat4{ glm::value_ptr(glm::lookAt(glm::make_vec3(eye), glm::make_vec3(center), glm::make_vec3(up))) };
+    }
+
+    Mat4 perspective(float viewportWidth, float viewportHeight, float fov = 45.0f, float near = 0.1f, float far = 0.1f)
+    {
+        return Mat4{ glm::value_ptr(glm::perspective(glm::radians(fov), viewportWidth / viewportHeight, 0.1f, 100.0f)) };
     }
 
 } // namespace radiance::math::mat4

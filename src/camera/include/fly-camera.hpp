@@ -19,17 +19,20 @@ class FlyCamera
 {
 public:
 
-    FlyCamera()
-    {
-        _yaw = 90.0f;
-        _pitch = 0.0f;
-        _movementSpeed = 2.5;
-        _mouseSensitivity = 0.1f;
-    }
+    FlyCamera(float yaw=90.0f, float pitch=0.0f, float movementSpeed=2.5f, float mouseSensitivity=0.1f,
+              float fov=45.0f, float near=0.1f, float far=100.0f)
+        : _yaw(yaw), _pitch(pitch), _movementSpeed(movementSpeed), 
+         _mouseSensitivity(mouseSensitivity), _fov(fov), _near(near), _far(far)
+    {}
 
     rmat4::Mat4 getViewMatrix()
     {
         return rmat4::lookAt(_cameraPos._data, (_cameraPos + _cameraFront)._data, _cameraUp._data);
+    }
+
+    rmat4::Mat4 getProjectionMatrix(float viewportWidth, float viewportHeight)
+    {
+        return rmat4::perspective(viewportWidth, viewportHeight, _fov, _near, _far);
     }
 
     void translate(CameraMovement direction, float deltaTime)
@@ -70,6 +73,8 @@ public:
     float _pitch, _yaw;
     float _movementSpeed;
     float _mouseSensitivity;
+    float _fov;
+    float _near, _far;
 
 private:
     void moveForward(float movementSpeed)

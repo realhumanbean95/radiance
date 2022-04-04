@@ -80,10 +80,10 @@ int main(int argc, const char** argv)
         {
             drawable2->bindContext();
             drawable2->setViewMatrix(camera.getViewMatrix());
-            drawable2->translateWorldSpace(objectPositions[i].data());
+            drawable2->translate(objectPositions[i].data());
             float angle = 20.0f * i;
-            drawable2->rotateWorldSpace(rotation_vector2, ((float)glfwGetTime() + angle) * 25);
-            drawable2->perspectiveClipSpace(window._width, window._height);
+            drawable2->rotate(rotation_vector2, ((float)glfwGetTime() + angle) * 25);
+            drawable2->setProjectionMatrix(camera.getProjectionMatrix(window._width, window._height));
             drawable2->draw(); // in OpenGL, render to back buffer
         }
         
@@ -94,12 +94,12 @@ int main(int argc, const char** argv)
         {
             drawable1->bindContext();
             drawable1->setViewMatrix(camera.getViewMatrix());
-            drawable1->translateWorldSpace(translation_vector);
-            drawable1->translateWorldSpace(objectPositions[i].data());
+            drawable1->translate(translation_vector);
+            drawable1->translate(objectPositions[i].data());
             float angle = 20.0f * i;
-            drawable1->rotateWorldSpace(rotation_vector, ((float)glfwGetTime() + angle) * 25);
-            drawable1->scaleWorldSpace(scaling_vector);
-            drawable1->perspectiveClipSpace(window._width, window._height);
+            drawable1->rotate(rotation_vector, ((float)glfwGetTime() + angle) * 25);
+            drawable1->scale(scaling_vector);
+            drawable1->setProjectionMatrix(camera.getProjectionMatrix(window._width, window._height));
             drawable1->draw(); // in OpenGL, render to back buffer
         }
 
