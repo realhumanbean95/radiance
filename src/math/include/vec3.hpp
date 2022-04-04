@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -9,6 +11,15 @@ namespace radiance::math::vec3
     class Vec3
     {
     public:
+
+        Vec3()
+        {
+            _data[0] = 0.0f;
+            _data[1] = 0.0f;
+            _data[2] = 0.0f;
+            _vector = glm::make_vec3(_data);
+            
+        }
 
         Vec3(float x, float y, float z)
         {
@@ -41,6 +52,14 @@ namespace radiance::math::vec3
             return *this;
         }
 
+        void operator=(const Vec3& rhs)
+        {
+            this->_data[0] = rhs._data[0];
+            this->_data[1] = rhs._data[1];
+            this->_data[2] = rhs._data[2];
+            this->_vector = rhs._vector;
+        }
+
         void normalize()
         {
             _vector = glm::normalize(_vector);
@@ -69,6 +88,12 @@ namespace radiance::math::vec3
             _vector = vec;
         }
     };
+
+    std::ostream& operator<<(std::ostream& lhs, const Vec3& rhs)
+    {
+        lhs << "{ " << rhs._data[0] << ", " << rhs._data[1] << ", " << rhs._data[2] << " }";
+        return lhs;
+    }
 
     Vec3 operator-(const Vec3& vec1, const Vec3& vec2)
     {

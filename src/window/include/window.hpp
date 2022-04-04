@@ -20,6 +20,9 @@ public:
             //return -1;
         }
 
+        // initialize x/y values to middle of window
+        _xPos = _width / 2;
+        _yPos = _height / 2;
 
         // version information should eventually come from environment variables or some kind of external configuration
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -48,6 +51,8 @@ public:
         // might eventually need to remove glad library as a dependency, only need glfw...
         glViewport(0, 0, _width, _height);
 
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
     }
     ~WindowGLFW()
     {
@@ -70,6 +75,8 @@ public:
             onAPress();
         if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
             onDPress();
+
+        glfwGetCursorPos(_window, &_xPos, &_yPos);
     }
 
     void swapBuffers()
@@ -88,6 +95,7 @@ public:
     }
 
     float _width, _height;
+    double _xPos, _yPos;
 
 private:
     // NOTE: made static so it could be passed to GLFW as a function pointer
