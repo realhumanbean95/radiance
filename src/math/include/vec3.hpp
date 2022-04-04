@@ -14,9 +14,9 @@ namespace radiance::math::vec3
 
         Vec3()
         {
-            _data[0] = 0.0f;
-            _data[1] = 0.0f;
-            _data[2] = 0.0f;
+            _data[0] = 1.0f;
+            _data[1] = 1.0f;
+            _data[2] = 1.0f;
             _vector = glm::make_vec3(_data);
             
         }

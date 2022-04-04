@@ -21,8 +21,10 @@ public:
         }
 
         // initialize x/y values to middle of window
-        _xPos = _width / 2;
-        _yPos = _height / 2;
+        _lastXPos = _width / 2;
+        _lastYPos = _height / 2;
+        _xOffset = 0.0f;
+        _yOffset = 0.0f;
 
         // version information should eventually come from environment variables or some kind of external configuration
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -51,7 +53,7 @@ public:
         // might eventually need to remove glad library as a dependency, only need glfw...
         glViewport(0, 0, _width, _height);
 
-        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     }
     ~WindowGLFW()
@@ -60,23 +62,29 @@ public:
     }
 
     void processInput(
-        std::function<void()> onWPress,
-        std::function<void()> onSPress,
-        std::function<void()> onAPress,
-        std::function<void()> onDPress)
+        std::function<void(int)> cameraKeyboardCallback,
+        std::function<void(float, float)> cameraMouseCallback)
     {
         if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(_window, true);
         if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
-            onWPress();
+            cameraKeyboardCallback(0);
         if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS)
-            onSPress();
+            cameraKeyboardCallback(1);
         if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
-            onAPress();
+            cameraKeyboardCallback(2);
         if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
-            onDPress();
+            cameraKeyboardCallback(3);
 
         glfwGetCursorPos(_window, &_xPos, &_yPos);
+
+        _xOffset = _xPos - _lastXPos;
+        _yOffset = _lastYPos - _yPos;
+
+        _lastXPos = _xPos;
+        _lastYPos = _yPos;
+
+        cameraMouseCallback(_xOffset, _yOffset);
     }
 
     void swapBuffers()
@@ -96,6 +104,8 @@ public:
 
     float _width, _height;
     double _xPos, _yPos;
+    double _lastXPos, _lastYPos;
+    double _xOffset, _yOffset;
 
 private:
     // NOTE: made static so it could be passed to GLFW as a function pointer

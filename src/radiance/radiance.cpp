@@ -10,10 +10,15 @@
 #include "texture.hpp"
 #include "fly-camera.hpp"
 
+#include <glm/glm.hpp>
+#include "vec3.hpp"
+
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
 // You can modify the source template at `configured_files/config.hpp.in`.
 #include <configured_files/config.hpp> // use this to get meta information about the build (version, etc)
+
+namespace rcamera = radiance::camera;
 
 int main(int argc, const char** argv)
 {
@@ -54,14 +59,16 @@ int main(int argc, const char** argv)
 
         // input
         window.processInput(
-            [&camera, &deltaTime]() 
-            { camera.moveForward(static_cast<float>(2.5 * deltaTime)); },
-            [&camera, &deltaTime]()
-            { camera.moveBackward(static_cast<float>(2.5 * deltaTime)); },
-            [&camera, &deltaTime]()
-            { camera.moveLeft(static_cast<float>(2.5 * deltaTime)); },
-            [&camera, &deltaTime]() 
-            { camera.moveRight(static_cast<float>(2.5 * deltaTime)); }
+            [&camera, &deltaTime](int direction) 
+            { 
+                camera.translate(
+                    static_cast<rcamera::CameraMovement>(direction),
+                    static_cast<float>(deltaTime));
+            },
+            [&camera](float xOffset, float yOffset)
+            {
+                camera.rotate(xOffset, yOffset);
+            }
         );
 
         //render
@@ -72,7 +79,7 @@ int main(int argc, const char** argv)
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable2->bindContext();
-            drawable2->setViewMatrix(camera._viewMatrix);
+            drawable2->setViewMatrix(camera.getViewMatrix());
             drawable2->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * i;
             drawable2->rotateWorldSpace(rotation_vector2, ((float)glfwGetTime() + angle) * 25);
@@ -86,7 +93,7 @@ int main(int argc, const char** argv)
         for (uint32_t i = 0; i < 10; i++)
         {
             drawable1->bindContext();
-            drawable1->setViewMatrix(camera._viewMatrix);
+            drawable1->setViewMatrix(camera.getViewMatrix());
             drawable1->translateWorldSpace(translation_vector);
             drawable1->translateWorldSpace(objectPositions[i].data());
             float angle = 20.0f * i;
