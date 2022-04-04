@@ -17,7 +17,6 @@ namespace radiance::math::vec3
             _data[0] = 1.0f;
             _data[1] = 1.0f;
             _data[2] = 1.0f;
-            _vector = glm::make_vec3(_data);
             
         }
 
@@ -26,12 +25,10 @@ namespace radiance::math::vec3
             _data[0] = x;
             _data[1] = y;
             _data[2] = z;
-            _vector = glm::make_vec3(_data);
         }
 
         Vec3(const Vec3& vec) {
-            memcpy(_data, glm::value_ptr(vec._vector), sizeof(float) * size());
-            _vector = glm::make_vec3(_data);
+            memcpy( _data, vec._data, _sizeInBytes );
         }
 
         Vec3& operator+=(const Vec3& rhs)
@@ -39,7 +36,6 @@ namespace radiance::math::vec3
             this->_data[0] += rhs._data[0];
             this->_data[1] += rhs._data[1];
             this->_data[2] += rhs._data[2];
-            this->_vector += rhs._vector;
             return *this;
         }
 
@@ -48,7 +44,6 @@ namespace radiance::math::vec3
             this->_data[0] -= rhs._data[0];
             this->_data[1] -= rhs._data[1];
             this->_data[2] -= rhs._data[2];
-            this->_vector -= rhs._vector;
             return *this;
         }
 
@@ -57,35 +52,28 @@ namespace radiance::math::vec3
             this->_data[0] = rhs._data[0];
             this->_data[1] = rhs._data[1];
             this->_data[2] = rhs._data[2];
-            this->_vector = rhs._vector;
         }
 
         void normalize()
         {
-            _vector = glm::normalize(_vector);
-            _data[0] = _vector.x;
-            _data[1] = _vector.y;
-            _data[2] = _vector.z;
+            glm::vec3 vector = glm::normalize( glm::make_vec3(_data) );
+            _data[0] = vector.x;
+            _data[1] = vector.y;
+            _data[2] = vector.z;
         }
 
-        uint32_t size()
-        {
-            return _size;
-        }
-
-        const uint32_t _size = 3;
-        float _data[3];
+        const static uint32_t _size = 3;
+        const static uint32_t _sizeInBytes = _size * sizeof(float);
+        float _data[_size];
 
     private:
         
-        glm::vec3 _vector;
 
         Vec3(glm::vec3 vec)
         {
             _data[0] = vec.x;
             _data[1] = vec.y;
             _data[2] = vec.z;
-            _vector = vec;
         }
     };
 
