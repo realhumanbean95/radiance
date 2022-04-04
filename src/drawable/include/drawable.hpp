@@ -75,11 +75,11 @@ protected:
         /************** copy our vertices array in a vertex buffer for OpenGL to use ***************/
         glGenBuffers(1, &_VBO);
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, _vertices.get(), GL_STATIC_DRAW);
 
     }
 
-    float* _vertices;
+    std::unique_ptr<float> _vertices;
     uint32_t _vertices_size_bytes;
     uint32_t _VAO;
     uint32_t _VBO;
@@ -95,18 +95,9 @@ class DrawableIndexed : public Drawable
 {
 
 protected:
-    uint32_t* _indices;
+    std::unique_ptr<uint32_t> _indices;
     uint32_t _indices_size_bytes;
     uint32_t _EBO;
-
-    DrawableIndexed(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
-        : Drawable(vertices, vertices_size_bytes), _indices(indices), _indices_size_bytes(indices_size_bytes)
-    {
-        /*************** copy our index array in a element buffer for OpenGL to use ****************/
-        glGenBuffers(1, &_EBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, indices, GL_STATIC_DRAW);
-    }
 
 public:
     virtual void draw()
@@ -121,6 +112,15 @@ public:
         _projectionMatrix = rmat4::Mat4{};
     }
 
+protected:
+    DrawableIndexed(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
+        : Drawable(vertices, vertices_size_bytes), _indices(indices), _indices_size_bytes(indices_size_bytes)
+    {
+        /*************** copy our index array in a element buffer for OpenGL to use ****************/
+        glGenBuffers(1, &_EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, _indices.get(), GL_STATIC_DRAW);
+    }
 };
 
 class Drawable_F3POSF3COL_Indexed : public DrawableIndexed
@@ -133,11 +133,11 @@ public:
         /****************** set the vertex attributes pointers (vertex semantic) *******************/
 
         // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_positionOffsetBytes);
         glEnableVertexAttribArray(0);
 
         // color attribute
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_colorOffsetBytes);
         glEnableVertexAttribArray(1);
 
         // unbind buffers, rebind explicitly when you want to draw this drawable
@@ -158,7 +158,10 @@ public:
         glBindVertexArray(_VAO);
     }
 
-private:
+    static constexpr uint32_t _positionOffsetBytes = 0;
+    static constexpr uint32_t _colorOffsetBytes = (3 * sizeof(float));
+    static constexpr uint32_t _vertexSizeBytes = 6 * sizeof(float);
+
 };
 
 class Drawable_F3POS_Indexed : public DrawableIndexed
@@ -171,7 +174,7 @@ public:
         /****************** set the vertex attributes pointers (vertex semantic) *******************/
 
         // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_positionOffsetBytes);
         glEnableVertexAttribArray(0);
 
         // unbind buffers, rebind explicitly when you want to draw this drawable
@@ -192,7 +195,8 @@ public:
         glBindVertexArray(_VAO);
     }
 
-private:
+    static constexpr uint32_t _positionOffsetBytes = 0;
+    static constexpr uint32_t _vertexSizeBytes = 3 * sizeof(float);
 };
 
 class Drawable_F3POSF2TEX_Indexed : public DrawableIndexed
@@ -205,11 +209,11 @@ public:
         /****************** set the vertex attributes pointers (vertex semantic) *******************/
         
         // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_positionOffsetBytes);
         glEnableVertexAttribArray(0);
 
         // texture coordinate attribute
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_texCoordOffsetBytes);
         glEnableVertexAttribArray(1);
 
         // unbind buffers, rebind explicitly when you want to draw this drawable
@@ -235,7 +239,11 @@ public:
         glBindVertexArray(_VAO);
     }
 
-private:
+
+    static constexpr uint32_t _positionOffsetBytes = 0;
+    static constexpr uint32_t _texCoordOffsetBytes = (3 * sizeof(float));
+    static constexpr uint32_t _vertexSizeBytes = 5 * sizeof(float);
+
     texture::Texture _texture;
 };
 
@@ -249,11 +257,11 @@ public:
         /****************** set the vertex attributes pointers (vertex semantic) *******************/
 
         // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_positionOffsetBytes);
         glEnableVertexAttribArray(0);
 
         // texture coordinate attribute
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, _vertexSizeBytes, (void*)_texCoordOffsetBytes);
         glEnableVertexAttribArray(1);
 
         // unbind buffers, rebind explicitly when you want to draw this drawable
@@ -278,7 +286,10 @@ public:
         glBindVertexArray(_VAO);
     }
 
-private:
+    static constexpr uint32_t _positionOffsetBytes = 0;
+    static constexpr uint32_t _texCoordOffsetBytes = (3 * sizeof(float));
+    static constexpr uint32_t _vertexSizeBytes = 5 * sizeof(float);
+
     texture::Texture _texture;
 };
 
