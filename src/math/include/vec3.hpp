@@ -111,7 +111,7 @@ namespace radiance::math::vec3
         };
     }
 
-    static Vec3 cross(Vec3 vec1, Vec3 vec2)
+    static Vec3 cross(const Vec3& vec1, const Vec3& vec2)
     {
         glm::vec3 cross_product = glm::cross(
             glm::make_vec3( vec1._data ),
