@@ -52,18 +52,13 @@ namespace radiance::math::mat4
 
         }
 
-        float* getDataPtr()
-        {
-            return _data;
-        }
-
         const static uint32_t _size = 16;
         const static uint32_t _size_in_bytes = _size * sizeof(float);
         float _data[_size];
 
     private:
 
-        Mat4(glm::mat4 mat4)
+        Mat4(const glm::mat4& mat4)
         {
             memcpy(_data, glm::value_ptr(mat4), _size_in_bytes);
         }

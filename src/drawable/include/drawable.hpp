@@ -18,9 +18,9 @@ public:
 
     virtual void draw()
     {
-        _shader.setModelMatrix(_modelMatrix.getDataPtr());
-        _shader.setViewMatrix(_viewMatrix.getDataPtr());
-        _shader.setProjectionMatrix(_projectionMatrix.getDataPtr());
+        _shader.setModelMatrix(_modelMatrix._data);
+        _shader.setViewMatrix(_viewMatrix._data);
+        _shader.setProjectionMatrix(_projectionMatrix._data);
 
         glDrawArrays(GL_TRIANGLES, 0, _vertices_size_bytes);
         _modelMatrix = rmat4::Mat4{};
@@ -100,9 +100,9 @@ class DrawableIndexed : public Drawable
 public:
     virtual void draw()
     {
-        _shader.setModelMatrix(_modelMatrix.getDataPtr());
-        _shader.setViewMatrix(_viewMatrix.getDataPtr());
-        _shader.setProjectionMatrix(_projectionMatrix.getDataPtr());
+        _shader.setModelMatrix(_modelMatrix._data);
+        _shader.setViewMatrix(_viewMatrix._data);
+        _shader.setProjectionMatrix(_projectionMatrix._data);
 
         glDrawElements(GL_TRIANGLES, _indices_size_bytes, GL_UNSIGNED_INT, 0);
         _modelMatrix = rmat4::Mat4{};
