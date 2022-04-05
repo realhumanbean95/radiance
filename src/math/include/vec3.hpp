@@ -54,14 +54,6 @@ namespace radiance::math::vec3
             this->_data[2] = rhs._data[2];
         }
 
-        void normalize()
-        {
-            glm::vec3 vector = glm::normalize( glm::make_vec3(_data) );
-            _data[0] = vector.x;
-            _data[1] = vector.y;
-            _data[2] = vector.z;
-        }
-
         const static uint32_t _size = 3;
         const static uint32_t _sizeInBytes = _size * sizeof(float);
         float _data[_size];
@@ -126,6 +118,12 @@ namespace radiance::math::vec3
             glm::make_vec3( vec2._data ));
         
         return Vec3{ cross_product.x, cross_product.y, cross_product.z };
+    }
+
+    static Vec3 normalize(const Vec3& vector)
+    {
+        glm::vec3 normalized_vector = glm::normalize(glm::make_vec3(vector._data));
+        return Vec3{ normalized_vector.x, normalized_vector.y, normalized_vector.z };
     }
 
 } // namespace radiance::math::vec3

@@ -62,8 +62,7 @@ public:
         float y = sin(glm::radians(_pitch));
         float z = -sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
 
-        _cameraFront = rvec3::Vec3{ x, y, z };
-        _cameraFront.normalize();
+        _cameraFront = rvec3::normalize(rvec3::Vec3{ x, y, z });
     }
 
     rvec3::Vec3 _cameraPos{ 0.0f, 0.0f, 3.0f };
@@ -89,15 +88,13 @@ private:
 
     void moveLeft(float movementSpeed)
     {
-        rvec3::Vec3 tmp = rvec3::cross(_cameraFront, _cameraUp);
-        tmp.normalize();
+        rvec3::Vec3 tmp = rvec3::normalize(rvec3::cross(_cameraFront, _cameraUp));
         _cameraPos -= tmp * movementSpeed;
     }
 
     void moveRight(float movementSpeed)
     {
-        rvec3::Vec3 tmp = rvec3::cross(_cameraFront, _cameraUp);
-        tmp.normalize();
+        rvec3::Vec3 tmp = rvec3::normalize(rvec3::cross(_cameraFront, _cameraUp));
         _cameraPos += tmp * movementSpeed;
     }
 
