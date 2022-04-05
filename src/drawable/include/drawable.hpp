@@ -64,6 +64,8 @@ protected:
     Drawable(float* vertices, uint32_t vertices_size_bytes)
         : _vertices{ vertices }, _vertices_size_bytes{ vertices_size_bytes }
     {
+        // for now, index and vertex buffer pointers just reference buffers on the stack, and copy the data to OpenGL;
+        // eventually, might be prudent to allocate memory for this data and copy it into member buffers...not sure.
         /******************** bind Vertex Array Object ********************************************/
         // generate a Vertex Attribute Object
         // Core OpenGL requires that we use a _VAO so it knows what to do with our vertex inputs.
@@ -116,6 +118,8 @@ protected:
     DrawableIndexed(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
         : Drawable(vertices, vertices_size_bytes), _indices(indices), _indices_size_bytes(indices_size_bytes)
     {
+        // for now, index and vertex buffer pointers just reference buffers on the stack, and copy the data to OpenGL;
+        // eventually, might be prudent to allocate memory for this data and copy it into member buffers...not sure.
         /*************** copy our index array in a element buffer for OpenGL to use ****************/
         glGenBuffers(1, &_EBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
