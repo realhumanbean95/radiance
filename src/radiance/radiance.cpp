@@ -10,9 +10,6 @@
 #include "texture.hpp"
 #include "fly-camera.hpp"
 
-#include <glm/glm.hpp>
-#include "vec3.hpp"
-
 // This file will be generated automatically when you run the CMake configuration step.
 // It creates a namespace called `radiance`.
 // You can modify the source template at `configured_files/config.hpp.in`.
