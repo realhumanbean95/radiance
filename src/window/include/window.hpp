@@ -75,16 +75,28 @@ public:
             cameraKeyboardCallback(2);
         if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
             cameraKeyboardCallback(3);
+        if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS)
+        {
+            glfwGetCursorPos(_window, &_xPos, &_yPos);
+            if(first_mouse)
+            { 
+                _lastXPos = _xPos;
+                _lastYPos = _yPos;
+                first_mouse = false;
+            }
 
-        glfwGetCursorPos(_window, &_xPos, &_yPos);
+            _xOffset = _xPos - _lastXPos;
+            _yOffset = _lastYPos - _yPos;
 
-        _xOffset = _xPos - _lastXPos;
-        _yOffset = _lastYPos - _yPos;
+            _lastXPos = _xPos;
+            _lastYPos = _yPos;
 
-        _lastXPos = _xPos;
-        _lastYPos = _yPos;
-
-        cameraMouseCallback(_xOffset, _yOffset);
+            cameraMouseCallback(_xOffset, _yOffset);
+        }
+        if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_3) == GLFW_RELEASE && !first_mouse)
+        {
+            first_mouse = true;
+        }
     }
 
     void swapBuffers()
@@ -106,6 +118,8 @@ public:
     double _xPos, _yPos;
     double _lastXPos, _lastYPos;
     double _xOffset, _yOffset;
+    bool first_mouse = true;
+
 
 private:
     // NOTE: made static so it could be passed to GLFW as a function pointer
