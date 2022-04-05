@@ -66,6 +66,7 @@ protected:
     {
         // for now, index and vertex buffer pointers just reference buffers on the stack, and copy the data to OpenGL;
         // eventually, might be prudent to allocate memory for this data and copy it into member buffers...not sure.
+
         /******************** bind Vertex Array Object ********************************************/
         // generate a Vertex Attribute Object
         // Core OpenGL requires that we use a _VAO so it knows what to do with our vertex inputs.
@@ -96,11 +97,6 @@ protected:
 class DrawableIndexed : public Drawable
 {
 
-protected:
-    std::unique_ptr<uint32_t> _indices;
-    uint32_t _indices_size_bytes;
-    uint32_t _EBO;
-
 public:
     virtual void draw()
     {
@@ -125,6 +121,11 @@ protected:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, _indices.get(), GL_STATIC_DRAW);
     }
+
+protected:
+    std::unique_ptr<uint32_t> _indices;
+    uint32_t _indices_size_bytes;
+    uint32_t _EBO;
 };
 
 class Drawable_F3POSF3COL_Indexed : public DrawableIndexed
@@ -248,6 +249,7 @@ public:
     static constexpr size_t _texCoordOffsetBytes = (3 * sizeof(float));
     static constexpr size_t _vertexSizeBytes = 5 * sizeof(float);
 
+private:
     texture::Texture _texture;
 };
 
@@ -294,6 +296,7 @@ public:
     static constexpr size_t _texCoordOffsetBytes = (3 * sizeof(float));
     static constexpr size_t _vertexSizeBytes = 5 * sizeof(float);
 
+private:
     texture::Texture _texture;
 };
 
