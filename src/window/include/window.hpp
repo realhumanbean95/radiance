@@ -65,6 +65,9 @@ public:
         std::function<void(int)> cameraKeyboardCallback,
         std::function<void(float, float)> cameraMouseCallback)
     {
+        bool leftAltKeyPressed = false; // when true, means waiting for GLFW_RELEASE for GLFW_KEY_LEFT_ALT
+        bool mouse3Pressed = false; // when true, means waiting for GLFW_RELEASE for GLFW_MOUSE_BUTTON_3
+
         if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(_window, true);
         if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
@@ -75,8 +78,9 @@ public:
             cameraKeyboardCallback(2);
         if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
             cameraKeyboardCallback(3);
-        if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS)
+        if (glfwGetKey(_window, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS && !leftAltKeyPressed)
         {
+            mouse3Pressed = true;
             glfwGetCursorPos(_window, &_xPos, &_yPos);
             if(first_mouse)
             { 
@@ -93,9 +97,35 @@ public:
 
             cameraMouseCallback(_xOffset, _yOffset);
         }
-        if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_3) == GLFW_RELEASE && !first_mouse)
+        if ( (glfwGetKey(_window, GLFW_MOUSE_BUTTON_3) == GLFW_RELEASE && !first_mouse) && mouse3Pressed )
         {
             first_mouse = true;
+            mouse3Pressed = false;
+        }
+        if (glfwGetKey(_window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS && !mouse3Pressed)
+        {
+            leftAltKeyPressed = true;
+            glfwGetCursorPos(_window, &_xPos, &_yPos);
+            if (first_mouse)
+            {
+                _lastXPos = _xPos;
+                _lastYPos = _yPos;
+                first_mouse = false;
+            }
+
+            _xOffset = _xPos - _lastXPos;
+            _yOffset = _lastYPos - _yPos;
+
+            _lastXPos = _xPos;
+            _lastYPos = _yPos;
+
+            cameraMouseCallback(_xOffset, _yOffset);
+        }
+        if (glfwGetKey(_window, GLFW_KEY_LEFT_ALT) == GLFW_RELEASE && !first_mouse && leftAltKeyPressed)
+        {
+            first_mouse = true;
+            leftAltKeyPressed = false;
+
         }
     }
 
