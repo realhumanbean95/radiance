@@ -78,7 +78,7 @@ public:
             cameraKeyboardCallback(2);
         if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
             cameraKeyboardCallback(3);
-        if (glfwGetKey(_window, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS && !leftAltKeyPressed)
+        if (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS && !leftAltKeyPressed)
         {
             mouse3Pressed = true;
             glfwGetCursorPos(_window, &_xPos, &_yPos);
@@ -97,7 +97,7 @@ public:
 
             cameraMouseCallback(_xOffset, _yOffset);
         }
-        if ( (glfwGetKey(_window, GLFW_MOUSE_BUTTON_3) == GLFW_RELEASE && !first_mouse) && mouse3Pressed )
+        if ( (glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_3) == GLFW_RELEASE && !first_mouse) && mouse3Pressed )
         {
             first_mouse = true;
             mouse3Pressed = false;
