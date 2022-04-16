@@ -10,7 +10,6 @@
             "name": "conf-common",
             "description": "General settings that apply to all configurations",
             "hidden": true,
-            "generator": "Visual Studio 17 2022",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}"
         },
@@ -19,6 +18,7 @@
             "description": "Windows settings for MSBuild toolchain that apply to msvc and clang",
             "hidden": true,
             "inherits": "conf-common",
+            "generator": "Visual Studio 17 2022",
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
@@ -38,6 +38,7 @@
             "description": "Linux settings for gcc and clang toolchains",
             "hidden": true,
             "inherits": "conf-common",
+            "generator": "Ninja",
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
@@ -131,9 +132,10 @@
             "description": "Target Linux with the clang compiler, debug build type",
             "inherits": "conf-linux-common",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang",
-                "CMAKE_CXX_COMPILER": "clang++",
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_C_COMPILER": "clang-12",
+                "CMAKE_CXX_COMPILER": "clang++-12",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_STANDARD": "17"
             }
         },
         {
