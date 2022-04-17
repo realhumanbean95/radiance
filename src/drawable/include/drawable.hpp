@@ -61,8 +61,8 @@ public:
     }
 
 protected:
-    Drawable(float* vertices, uint32_t vertices_size_bytes)
-        : _vertices{ vertices }, _vertices_size_bytes{ vertices_size_bytes }
+    Drawable(const float* const vertices, uint32_t vertices_size_bytes)
+        : _vertices_size_bytes{ vertices_size_bytes }
     {
         // for now, index and vertex buffer pointers just reference buffers on the stack; data is immediately copied to OpenGL;
         // eventually, might be prudent to dynamically allocate memory for this data and copy it into member buffers...not sure.
@@ -78,11 +78,10 @@ protected:
         /************** copy our vertices array in a vertex buffer for OpenGL to use ***************/
         glGenBuffers(1, &_VBO);
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, _vertices.get(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, vertices, GL_STATIC_DRAW);
 
     }
 
-    std::unique_ptr<float> _vertices;
     uint32_t _vertices_size_bytes;
     uint32_t _VAO;
     uint32_t _VBO;
@@ -111,8 +110,8 @@ public:
     }
 
 protected:
-    DrawableIndexed(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
-        : Drawable(vertices, vertices_size_bytes), _indices(indices), _indices_size_bytes(indices_size_bytes)
+    DrawableIndexed(const float* const vertices, const uint32_t* const indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
+        : Drawable(vertices, vertices_size_bytes), _indices_size_bytes(indices_size_bytes)
     {
         // for now, index and vertex buffer pointers just reference buffers on the stack; data is immediately copied to OpenGL;
         // eventually, might be prudent to dynamically allocate memory for this data and copy it into member buffers...not sure.
@@ -120,11 +119,10 @@ protected:
         /*************** copy our index array in a element buffer for OpenGL to use ****************/
         glGenBuffers(1, &_EBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, _indices.get(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices_size_bytes, indices, GL_STATIC_DRAW);
     }
 
 protected:
-    std::unique_ptr<uint32_t> _indices;
     uint32_t _indices_size_bytes;
     uint32_t _EBO;
 };
@@ -132,7 +130,7 @@ protected:
 class Drawable_F3POSF3COL_Indexed : public DrawableIndexed
 {
 public:
-    Drawable_F3POSF3COL_Indexed(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
+    Drawable_F3POSF3COL_Indexed(const float* const vertices, const uint32_t* const indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
         : DrawableIndexed( vertices, indices, vertices_size_bytes, indices_size_bytes)
     {
 
@@ -173,7 +171,7 @@ public:
 class Drawable_F3POS_Indexed : public DrawableIndexed
 {
 public:
-    Drawable_F3POS_Indexed(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
+    Drawable_F3POS_Indexed(const float* const vertices, const uint32_t* const indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
         : DrawableIndexed(vertices, indices, vertices_size_bytes, indices_size_bytes)
     {
 
@@ -208,7 +206,7 @@ public:
 class Drawable_F3POSF2TEX_Indexed : public DrawableIndexed
 {
 public:
-    Drawable_F3POSF2TEX_Indexed(float* vertices, uint32_t* indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
+    Drawable_F3POSF2TEX_Indexed(const float* const vertices, const uint32_t* const indices, uint32_t vertices_size_bytes, uint32_t indices_size_bytes)
         : DrawableIndexed(vertices, indices, vertices_size_bytes, indices_size_bytes)
     {
 
@@ -257,7 +255,7 @@ private:
 class Drawable_F3POSF2TEX : public Drawable
 {
 public:
-    Drawable_F3POSF2TEX(float* vertices, uint32_t vertices_size_bytes)
+    Drawable_F3POSF2TEX(const float* const vertices, uint32_t vertices_size_bytes)
         : Drawable(vertices, vertices_size_bytes)
     {
 
