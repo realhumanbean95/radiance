@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <cstring>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -34,10 +35,12 @@ public:
         _window = glfwCreateWindow(_width, _height, "Hello Radiance!", NULL, NULL);
         if (_window == NULL)
         {
-            std::cout << "Failed to create GLFW window" << std::endl;
+            std::memcpy(errorMessage, "Failed to initialize GLAD", 25);
+            windowCreationErrorCode = -1;
             glfwTerminate();
-            //return -1;
+            return;
         }
+        
         glfwMakeContextCurrent(_window);
         
         // NOTE: framebufferSizeCallback is a static member function.
@@ -45,8 +48,9 @@ public:
 
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
-            std::cout << "Failed to initialize GLAD" << std::endl;
-            //return -1;
+            std::strncpy(errorMessage, "Failed to initialize GLAD", 25);
+            windowCreationErrorCode = -1;
+            return;
         }
 
         // NOTE: I think having this OpenGL call in this class makes the window abstraction leaky...
@@ -149,6 +153,9 @@ public:
     double _lastXPos, _lastYPos;
     double _xOffset, _yOffset;
     bool first_mouse = true;
+
+    int windowCreationErrorCode;
+    char errorMessage[100];
 
 
 private:

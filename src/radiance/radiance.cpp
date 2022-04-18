@@ -24,6 +24,11 @@ int main(int argc, const char** argv)
     std::cout << "Hello Radiance!" << std::endl;
 
     window::WindowGLFW window{800, 600};
+    if(window.windowCreationErrorCode != 0)
+    {
+        std::cout << window.errorMessage << std::endl;
+        return window.windowCreationErrorCode;
+    }
 
     drawable::DrawableFactory factory{};
 
