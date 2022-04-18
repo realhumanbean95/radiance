@@ -1,20 +1,23 @@
-#ifndef RADIANCE_CONFIG_HPP
-#define RADIANCE_CONFIG_HPP
+#pragma once
+
+#include <filesystem>
 
 // this is a basic example of how a CMake configured file might look
 // in this particular case, we are using it to set the version number of our executable
 namespace radiance::cmake {
+
+namespace sfs = std::filesystem;
+
 static constexpr std::string_view project_name = "@PROJECT_NAME@";
 static constexpr std::string_view project_version = "@PROJECT_VERSION@";
 static constexpr int project_version_major { @PROJECT_VERSION_MAJOR@ };
 static constexpr int project_version_minor { @PROJECT_VERSION_MINOR@ };
 static constexpr int project_version_patch { @PROJECT_VERSION_PATCH@ };
 static constexpr int project_version_tweak { @PROJECT_VERSION_TWEAK@ };
-static std::string project_dir = getenv("PROJECT_DIR");
-static std::string resource_dir = project_dir+"resources/";
-static std::string shader_dir = resource_dir+"shader/";
-static std::string texture_dir = resource_dir+"texture/";
+
+static sfs::path project_dir = getenv("PROJECT_DIR");
+static sfs::path resource_dir = project_dir/"resources";
+static sfs::path shader_dir = resource_dir/"shader";
+static sfs::path texture_dir = resource_dir/"texture";
 
 }// namespace radiance::cmake
-
-#endif

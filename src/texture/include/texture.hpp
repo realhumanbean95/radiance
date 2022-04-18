@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <filesystem>
 
 #include <glad/glad.h>
 
@@ -19,7 +20,7 @@ namespace radiance::texture
     {
     public:
         // should consider refactor to load texture into memory on construction, defer sending to GPU...maybe.
-        Texture(const char* imagePath = (radiance::cmake::texture_dir + std::string(R"(container.jpg)")).c_str()  )
+        Texture(const char* imagePath = (radiance::cmake::texture_dir/"container.jpg").string().c_str()  )
         {
             // create and bind the texture object
             glGenTextures(1, &_texture);

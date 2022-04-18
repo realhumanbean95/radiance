@@ -1,5 +1,6 @@
 #include <iostream>
 #include <array>
+#include <filesystem>
 
 #include "data.hpp"
 
@@ -39,8 +40,8 @@ int main(int argc, const char** argv)
     // instantiate and initialize second drawable
     auto drawable2 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2));
     drawable2->setShader(shader::Shader{
-        (radiance::cmake::shader_dir + std::string(R"(shader-texture.vs)")).c_str(),
-        (radiance::cmake::shader_dir + std::string(R"(shader-texture.fs)")).c_str()
+        (radiance::cmake::shader_dir/"shader-texture.vs").string().c_str(),
+        (radiance::cmake::shader_dir/"shader-texture.fs").string().c_str()
     });
     drawable2->setTexture( texture::Texture{} );
 
