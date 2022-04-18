@@ -25,8 +25,8 @@ namespace radiance::shader
 
         // constructor generates the shader on the fly
         // ------------------------------------------------------------------------
-        Shader(const char* vertexPath = (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader1.vs)")).c_str(),
-            const char* fragmentPath = (radiance::cmake::project_dir + std::string(R"(\resources\shader\shader1.fs)")).c_str() )
+        Shader(const char* vertexPath = (radiance::cmake::shader_dir + std::string(R"(shader1.vs)")).c_str(),
+            const char* fragmentPath = (radiance::cmake::shader_dir + std::string(R"(shader1.fs)")).c_str() )
         {
             // 1. retrieve the vertex/fragment source code from filePath
             std::string vertexCode;

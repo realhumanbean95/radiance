@@ -154,7 +154,7 @@ public:
     double _xOffset, _yOffset;
     bool first_mouse = true;
 
-    int windowCreationErrorCode;
+    int windowCreationErrorCode = 0;
     char errorMessage[100];
 
 

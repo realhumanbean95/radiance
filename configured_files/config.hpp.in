@@ -11,6 +11,10 @@ static constexpr int project_version_minor { @PROJECT_VERSION_MINOR@ };
 static constexpr int project_version_patch { @PROJECT_VERSION_PATCH@ };
 static constexpr int project_version_tweak { @PROJECT_VERSION_TWEAK@ };
 static std::string project_dir = getenv("PROJECT_DIR");
+static std::string resource_dir = project_dir+"resources/";
+static std::string shader_dir = resource_dir+"shader/";
+static std::string texture_dir = resource_dir+"texture/";
+
 }// namespace radiance::cmake
 
 #endif
