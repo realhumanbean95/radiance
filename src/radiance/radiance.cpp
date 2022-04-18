@@ -79,7 +79,7 @@ int main(int argc, const char** argv)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         float rotation_vector2[]{ 1.0f, 1.0f, 1.0f };
-        for (uint32_t i = 0; i < 10; i++)
+        for (uint32_t i = 1; i < 10; i++)
         {
             drawable2->bindContext();
             drawable2->setViewMatrix(camera.getViewMatrix());
@@ -92,7 +92,7 @@ int main(int argc, const char** argv)
         float translation_vector[]{ 0.0f, 0.25f, 1.0f };
         float rotation_vector[]{ 0.0f, 1.0f, 0.0f };
         float scaling_vector[]{ 0.5, 0.5, 0.5 };
-        for (uint32_t i = 0; i < 10; i++)
+        for (uint32_t i = 1; i < 10; i++)
         {
             drawable1->bindContext();
             drawable1->setViewMatrix(camera.getViewMatrix());
