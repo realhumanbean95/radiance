@@ -9,3 +9,7 @@ It may change in the future, but for now it's just a small OpenGL rendering engi
 
 ## Building
 TODO
+*Lighting
+*Shadows
+*Model loading
+*Performance optimzations (such as occlusion culling)
