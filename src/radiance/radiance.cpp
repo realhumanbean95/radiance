@@ -34,16 +34,26 @@ int main(int argc, const char** argv)
     drawable::DrawableFactory factory{};
 
     // instantiate and initialize first drawable
-    auto drawable1 = factory.createDrawable(drawable::F3POSF3COL_INDEXED, vertices1, indices1, sizeof(vertices1), sizeof(indices1));
-    drawable1->setShader(shader::Shader{});
+    auto triangle1 = factory.createDrawable(drawable::F3POSF3COL_INDEXED, vertices1, indices1, sizeof(vertices1), sizeof(indices1));
+    triangle1->setShader(shader::Shader{});
 
     // instantiate and initialize second drawable
-    auto drawable2 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2));
-    drawable2->setShader(shader::Shader{
+    auto box1 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2));
+    box1->setShader(shader::Shader{
         (radiance::cmake::shader_dir/"shader-texture.vs").string().c_str(),
         (radiance::cmake::shader_dir/"shader-texture.fs").string().c_str()
     });
-    drawable2->setTexture( texture::Texture{} );
+    box1->setTexture( texture::Texture{} );
+
+    // instantiate and initialize second drawable
+    auto lightSource1 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2));
+    lightSource1->setShader(shader::Shader{
+        (radiance::cmake::shader_dir/"shader-texture.vs").string().c_str(),
+        (radiance::cmake::shader_dir/"shader-texture.fs").string().c_str()
+    });
+    lightSource1->setTexture( texture::Texture{
+        (radiance::cmake::texture_dir/"sun.jpg").string().c_str()
+    } );
 
     glEnable(GL_DEPTH_TEST);
 
@@ -81,12 +91,12 @@ int main(int argc, const char** argv)
         float rotation_vector2[]{ 1.0f, 1.0f, 1.0f };
         for (uint32_t i = 1; i < 10; i++)
         {
-            drawable2->bindContext();
-            drawable2->setViewMatrix(camera.getViewMatrix());
-            drawable2->translate(objectPositions[i].data());
-            drawable2->rotate(rotation_vector2, ((float)glfwGetTime() + 20.0f * i) * 25);
-            drawable2->setProjectionMatrix(camera.getProjectionMatrix(window._width, window._height));
-            drawable2->draw(); // in OpenGL, render to back buffer
+            box1->bindContext();
+            box1->setViewMatrix(camera.getViewMatrix());
+            box1->translate(objectPositions[i].data());
+            box1->rotate(rotation_vector2, ((float)glfwGetTime() + 20.0f * i) * 25);
+            box1->setProjectionMatrix(camera.getProjectionMatrix(window._width, window._height));
+            box1->draw(); // in OpenGL, render to back buffer
         }
         
         float translation_vector[]{ 0.0f, 0.25f, 1.0f };
@@ -94,15 +104,22 @@ int main(int argc, const char** argv)
         float scaling_vector[]{ 0.5, 0.5, 0.5 };
         for (uint32_t i = 1; i < 10; i++)
         {
-            drawable1->bindContext();
-            drawable1->setViewMatrix(camera.getViewMatrix());
-            drawable1->translate(translation_vector);
-            drawable1->translate(objectPositions[i].data());
-            drawable1->rotate(rotation_vector, ((float)glfwGetTime() + 20.0f * i) * 25);
-            drawable1->scale(scaling_vector);
-            drawable1->setProjectionMatrix(camera.getProjectionMatrix(window._width, window._height));
-            drawable1->draw(); // in OpenGL, render to back buffer
+            triangle1->bindContext();
+            triangle1->setViewMatrix(camera.getViewMatrix());
+            triangle1->translate(translation_vector);
+            triangle1->translate(objectPositions[i].data());
+            triangle1->rotate(rotation_vector, ((float)glfwGetTime() + 20.0f * i) * 25);
+            triangle1->scale(scaling_vector);
+            triangle1->setProjectionMatrix(camera.getProjectionMatrix(window._width, window._height));
+            triangle1->draw(); // in OpenGL, render to back buffer
         }
+
+        lightSource1->bindContext();
+        lightSource1->setViewMatrix(camera.getViewMatrix());
+        lightSource1->rotate(rotation_vector2, ((float)glfwGetTime()) * 12);
+        lightSource1->scale(scaling_vector);
+        lightSource1->setProjectionMatrix(camera.getProjectionMatrix(window._width, window._height));
+        lightSource1->draw(); // in OpenGL, render to back buffer
 
         // call events and swap front and back buffers
         window.swapBuffers();
