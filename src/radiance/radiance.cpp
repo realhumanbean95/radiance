@@ -31,6 +31,8 @@ int main(int argc, const char** argv)
         return window.windowCreationErrorCode;
     }
 
+    glEnable(GL_DEPTH_TEST);
+
     drawable::DrawableFactory factory{};
 
     // instantiate and initialize first drawable
@@ -44,8 +46,6 @@ int main(int argc, const char** argv)
         (radiance::cmake::shader_dir/"shader-texture.fs").string().c_str()
     });
     drawable2->setTexture( texture::Texture{} );
-
-    glEnable(GL_DEPTH_TEST);
 
     // camera
     radiance::camera::FlyCamera camera{};
