@@ -40,16 +40,16 @@ int main(int argc, const char** argv)
     // instantiate and initialize second drawable
     auto box1 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2));
     box1->setShader(shader::Shader{
-        (radiance::cmake::shader_dir/"shader-texture.vs").string().c_str(),
-        (radiance::cmake::shader_dir/"shader-texture.fs").string().c_str()
+        (radiance::cmake::shader_dir/"texture.vs").string().c_str(),
+        (radiance::cmake::shader_dir/"texture.fs").string().c_str()
     });
     box1->setTexture( texture::Texture{} );
 
     // instantiate and initialize second drawable
     auto lightSource1 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2));
     lightSource1->setShader(shader::Shader{
-        (radiance::cmake::shader_dir/"shader-texture.vs").string().c_str(),
-        (radiance::cmake::shader_dir/"shader-texture.fs").string().c_str()
+        (radiance::cmake::shader_dir/"texture.vs").string().c_str(),
+        (radiance::cmake::shader_dir/"texture.fs").string().c_str()
     });
     lightSource1->setTexture( texture::Texture{
         (radiance::cmake::texture_dir/"sun.jpg").string().c_str()

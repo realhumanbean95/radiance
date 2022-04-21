@@ -14,4 +14,3 @@ TODO
 * Lighting
 * Shadows
 * Model loading
-* Performance optimzations (such as occlusion culling)
