@@ -8,11 +8,8 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-uniform mat4 modelMatrixUpdate;
-
 void main()
 {
-    // inverted Y coord as part of LearnOpenGL exercise to make triangle upside down
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPos.x, -aPos.y, aPos.z, 1.0);
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPos, 1.0);
     ourColor = aColor;
 }

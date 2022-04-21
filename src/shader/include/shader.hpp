@@ -26,8 +26,8 @@ namespace radiance::shader
 
         // constructor generates the shader on the fly
         // ------------------------------------------------------------------------
-        Shader(const char* vertexPath = (radiance::cmake::shader_dir/"shader1.vs").string().c_str(),
-            const char* fragmentPath = (radiance::cmake::shader_dir/"shader1.fs").string().c_str())
+        Shader(const char* vertexPath = (radiance::cmake::shader_dir/"default.vs").string().c_str(),
+            const char* fragmentPath = (radiance::cmake::shader_dir/"default.fs").string().c_str())
         {
             // 1. retrieve the vertex/fragment source code from filePath
             std::string vertexCode;
@@ -108,6 +108,13 @@ namespace radiance::shader
         void setFloat(const std::string& name, float value) const
         {
             glUniform1f(glGetUniformLocation(_ID, name.c_str()), value);
+        }
+
+        // might be a good place for a C++20 Vec3 concept...
+        void setVec3(const std::string& name, float* value) const
+        {
+            uint32_t location = glGetUniformLocation(_ID, name.c_str());
+            glUniform3fv(location, 1, value);
         }
 
         // might be a good place for a C++20 Mat4 concept...
