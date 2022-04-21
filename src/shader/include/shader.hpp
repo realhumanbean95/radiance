@@ -110,6 +110,13 @@ namespace radiance::shader
             glUniform1f(glGetUniformLocation(_ID, name.c_str()), value);
         }
 
+        // might be a good place for a C++20 Vec3 concept...
+        void setVec3(const std::string& name, float* value) const
+        {
+            uint32_t location = glGetUniformLocation(_ID, name.c_str());
+            glUniform3fv(location, 1, value);
+        }
+
         // might be a good place for a C++20 Mat4 concept...
         void setMat4(const std::string& name, float* value) const
         {

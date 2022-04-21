@@ -33,31 +33,46 @@ int main(int argc, const char** argv)
 
     drawable::DrawableFactory factory{};
 
-    // instantiate and initialize first drawable
-    auto triangle1 = factory.createDrawable(drawable::F3POSF3COL_INDEXED, vertices1, indices1, sizeof(vertices1), sizeof(indices1));
+    /**************************************************************************************************/
+    //  Instantiate and initialize our drawables
+    /**************************************************************************************************/
+    // triangle1
+    auto triangle1 = 
+        factory.createDrawable(drawable::F3POSF3COL_INDEXED, vertices1, indices1, sizeof(vertices1), sizeof(indices1));
     triangle1->setShader(shader::Shader{
-        (radiance::cmake::shader_dir / "unlit-color-attribute.vs").string().c_str() 
-    });
+        (radiance::cmake::shader_dir / "unlit-color-attribute.vs").string().c_str() });
 
-    // instantiate and initialize second drawable
-    auto box1 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2));
+    // box1
+    auto box1 = std::shared_ptr<drawable::Drawable>(
+        factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2)));
     box1->setShader(shader::Shader{
-        (radiance::cmake::shader_dir/"unlit-texture.vs").string().c_str(),
-        (radiance::cmake::shader_dir/"unlit-texture.fs").string().c_str()
-    });
+        (radiance::cmake::shader_dir / "lit-texture.vs").string().c_str(),
+        (radiance::cmake::shader_dir / "lit-texture.fs").string().c_str() });
     box1->setTexture( texture::Texture{} );
 
-    // instantiate and initialize second drawable
+    // box2
+    auto box2 = std::shared_ptr<drawable::Drawable>(
+        factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2)));
+    box2->setShader(shader::Shader{
+        (radiance::cmake::shader_dir / "lit-texture.vs").string().c_str(),
+        (radiance::cmake::shader_dir / "lit-texture.fs").string().c_str() });
+    box2->setTexture(texture::Texture{
+        (radiance::cmake::texture_dir / "wall.jpg").string().c_str() });
+
+    // lightSource1
     auto lightSource1 = factory.createDrawable(drawable::F3POSF2TEX, vertices2, sizeof(vertices2));
     lightSource1->setShader(shader::Shader{
         (radiance::cmake::shader_dir/"unlit-texture.vs").string().c_str(),
-        (radiance::cmake::shader_dir/"unlit-texture.fs").string().c_str()
-    });
+        (radiance::cmake::shader_dir/"unlit-texture.fs").string().c_str() });
     lightSource1->setTexture( texture::Texture{
-        (radiance::cmake::texture_dir/"sun.jpg").string().c_str()
-    } );
+        (radiance::cmake::texture_dir/"sun.jpg").string().c_str() });
 
-    glEnable(GL_DEPTH_TEST);
+    /**************************************************************************************************/
+    //  Put our lit drawable(s) into a list
+    /**************************************************************************************************/
+    std::list<std::shared_ptr<drawable::Drawable>> litObjects;
+    litObjects.push_back( box1 );
+    litObjects.push_back( box2 );
 
     // camera
     radiance::camera::FlyCamera camera{};
@@ -67,6 +82,10 @@ int main(int argc, const char** argv)
 
     while ( !window.shouldClose() )
     {
+
+        /**************************************************************************************************/
+        //  Handle KBaM input and update camera
+        /**************************************************************************************************/
         // per-frame time calculations
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
@@ -74,24 +93,33 @@ int main(int argc, const char** argv)
 
         // input
         window.processInput(
+            // fly-camera keyboard control callback
             [&camera, &deltaTime](int direction) 
-            { 
-                camera.translate(
-                    static_cast<rcamera::CameraMovement>(direction),
-                    static_cast<float>(deltaTime));
-            },
+                { camera.translate( static_cast<rcamera::CameraMovement>(direction), static_cast<float>(deltaTime) ); },
+            
+            // fly-camera mouse control callback
             [&camera](float xOffset, float yOffset)
-            {
-                camera.rotate(xOffset, yOffset);
-            }
+                { camera.rotate(xOffset, yOffset); }
         );
 
-        //render
+        /**************************************************************************************************/
+        //  Apply lightColor to our lit objects
+        /**************************************************************************************************/
+        float lightColor[] = { 0.94f, 0.73f, 0.02f };
+        std::ranges::for_each(litObjects, 
+            [&lightColor](auto drawable) {
+                drawable->bindContext();
+                drawable->_shader.setVec3("lightColor", lightColor); 
+        });
+
+        /**************************************************************************************************/
+        //  Apply transformations and render our objects
+        /**************************************************************************************************/
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         float rotation_vector2[]{ 1.0f, 1.0f, 1.0f };
-        for (uint32_t i = 1; i < 10; i++)
+        for (uint32_t i = 1; i < 5; i++)
         {
             box1->bindContext();
             box1->setViewMatrix(camera.getViewMatrix());
@@ -99,6 +127,16 @@ int main(int argc, const char** argv)
             box1->rotate(rotation_vector2, ((float)glfwGetTime() + 20.0f * i) * 25);
             box1->setProjectionMatrix(camera.getProjectionMatrix(window._width, window._height));
             box1->draw(); // in OpenGL, render to back buffer
+        }
+
+        for (uint32_t i = 5; i < 10; i++)
+        {
+            box2->bindContext();
+            box2->setViewMatrix(camera.getViewMatrix());
+            box2->translate(objectPositions[i].data());
+            box2->rotate(rotation_vector2, ((float)glfwGetTime() + 20.0f * i) * 25);
+            box2->setProjectionMatrix(camera.getProjectionMatrix(window._width, window._height));
+            box2->draw(); // in OpenGL, render to back buffer
         }
         
         float translation_vector[]{ 0.0f, 0.25f, 1.0f };

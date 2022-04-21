@@ -62,6 +62,15 @@ public:
         _viewMatrix = matrix;
     }
 
+    uint32_t _vertices_size_bytes;
+    uint32_t _VAO;
+    uint32_t _VBO;
+
+    rshader::Shader _shader;
+    rmat4::Mat4 _modelMatrix;
+    rmat4::Mat4 _viewMatrix;
+    rmat4::Mat4 _projectionMatrix;
+
 protected:
     Drawable(const float* const vertices, uint32_t vertices_size_bytes)
         : _vertices_size_bytes{ vertices_size_bytes }
@@ -83,16 +92,6 @@ protected:
         glBufferData(GL_ARRAY_BUFFER, vertices_size_bytes, vertices, GL_STATIC_DRAW);
 
     }
-
-    uint32_t _vertices_size_bytes;
-    uint32_t _VAO;
-    uint32_t _VBO;
-
-    rshader::Shader _shader;
-    rmat4::Mat4 _modelMatrix;
-    rmat4::Mat4 _viewMatrix;
-    rmat4::Mat4 _projectionMatrix;
-
 };
 
 class DrawableIndexed : public Drawable
